@@ -1,0 +1,28 @@
+.signin {
+    max-width: 300px;
+    margin: 50px auto;
+    text-align: center;
+  }
+  
+  .signin input {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+  }
+  
+  .signin button {
+    padding: 10px 20px;
+    background: #e50914;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  .error-message {
+    color: red;
+    font-size: 1.2rem;
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  
