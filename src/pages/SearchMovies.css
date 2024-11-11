@@ -28,15 +28,27 @@ h1 {
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
+  margin: 0 auto; /* Center the movie list */
+  padding: 20px; /* Add padding around the list */
 }
 
 .movie-item {
-  text-align: center;
-  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  width: calc(20% - 20px); /* 한 줄에 5개의 영화가 나오도록 설정 */
+  margin: 10px; /* 각 항목 사이에 여백 추가 */
 }
 
 .movie-item img {
-  width: 150px;
+  width: 100%;
+  height: auto;
+  max-width: 100%; /* 이미지가 항목 너비를 넘지 않도록 설정 */
+  transition: transform 0.3s ease-in-out; /* 부드러운 확대 애니메이션 */
+}
+
+.movie-item:hover img {
+  transform: scale(1.1); /* 마우스 오버 시 이미지 확대 */
 }
 
 .movie-item p {
@@ -48,3 +60,4 @@ h1 {
   margin: auto;
   padding: 10px;
 }
+

@@ -19,19 +19,17 @@ const SearchMovies = () => {
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        // 장르와 다른 필터를 포함하여 API 요청을 보냄
         let url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=ko-KR&page=${page}&with_genres=${genre}&with_original_language=${language}`;
 
-        // 최소 및 최대 평점이 설정되어 있으면 추가
         if (ratingMin) url += `&vote_average.gte=${ratingMin}`;
         if (ratingMax) url += `&vote_average.lte=${ratingMax}`;
 
         const response = await fetch(url);
         const data = await response.json();
         if (page === 1) {
-          setMovies(data.results); // 첫 페이지일 경우 영화 목록을 덮어씀
+          setMovies(data.results);
         } else {
-          setMovies((prevMovies) => [...prevMovies, ...data.results]); // 추가 페이지일 경우 영화 목록에 추가
+          setMovies((prevMovies) => [...prevMovies, ...data.results]);
         }
         setLoading(false);
       } catch (error) {
@@ -40,8 +38,8 @@ const SearchMovies = () => {
       }
     };
 
-    fetchMovies(); // 페이지가 변경될 때마다 새로운 영화 데이터를 가져옵니다.
-  }, [page, genre, ratingMin, ratingMax, language]); // 의존성 배열에 필터와 페이지 추가
+    fetchMovies();
+  }, [page, genre, ratingMin, ratingMax, language]);
 
   // 필터링 로직 (검색어를 기준으로 필터링)
   const filteredMovies = movies.filter((movie) =>
@@ -50,17 +48,15 @@ const SearchMovies = () => {
 
   return (
     <div className="container">
-      {/* 헤더 컴포넌트 추가 */}
       <Header />
 
-      
       {/* 검색 및 필터 설정 */}
       <div className="filters">
         <input
           type="text"
           placeholder="영화 제목으로 검색..."
           value={filter}
-          onChange={(e) => setFilter(e.target.value)} // 검색어 업데이트
+          onChange={(e) => setFilter(e.target.value)}
         />
 
         {/* 장르 선택 */}
@@ -71,7 +67,6 @@ const SearchMovies = () => {
           <option value="16">애니메이션</option>
           <option value="35">코미디</option>
           <option value="80">범죄</option>
-          {/* TMDb에서 제공하는 장르 ID를 사용 */}
         </select>
 
         {/* 최소 평점 선택 */}
@@ -107,7 +102,6 @@ const SearchMovies = () => {
           <option value="en">영어</option>
           <option value="ko">한국어</option>
           <option value="ja">일본어</option>
-          {/* 필요에 따라 더 많은 언어 추가 가능 */}
         </select>
 
         {/* 초기화 버튼 */}
@@ -117,8 +111,7 @@ const SearchMovies = () => {
             setRatingMin(""); 
             setRatingMax("");
             setLanguage(""); 
-            setPage(1); 
-            // fetchMovies() 대신 필터 값을 초기화하면 useEffect가 실행됨.
+            setPage(1);
         }}>
           초기화
         </button>
@@ -132,7 +125,8 @@ const SearchMovies = () => {
           <div className="movie-list">
             {filteredMovies.length > 0 ? (
               filteredMovies.map((movie) => (
-                <div className="movie-item" key={movie.id}>
+                // 포스터 클릭 시 상세 페이지로 이동하는 기능 추가
+                <div className="movie-item" key={movie.id} onClick={() => window.location.href = `/movie/${movie.id}`}>
                   <img
                     src={`${IMAGE_BASE_URL}${movie.poster_path}`}
                     alt={movie.title}
