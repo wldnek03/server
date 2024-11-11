@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
-import PopularList from './pages/PopularList';
+import PopularList from './components/PopularList';
 import SearchMovies from './pages/SearchMovies';
 
 function App() {

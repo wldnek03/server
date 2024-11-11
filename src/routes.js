@@ -2,8 +2,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import SignIn from './pages/SignIn';
 import Wishlist from './pages/Wishlist';
-import PopularList from './pages/PopularList';
+import PopularList from './components/PopularList';
 import SearchMovies from './pages/SearchMovies';
+import MovieList from './pages/MovieList';
 
 const AppRoutes = () => (
   <Router>
@@ -11,8 +12,8 @@ const AppRoutes = () => (
       <Route path="/" element={<Home />} />
       <Route path="/signin" element={<SignIn />} />
       <Route path="/wishlist" element={<Wishlist />} />
-      <Route path="/popular" element={<PopularList />} />
-      <Route path="/search" element={<SearchMovies />} />
+      <Route path="/popular" element={<MovieList movies={PopularList} />} />
+      <Route path="/search" element={<MovieList movies={SearchMovies} />} />
     </Routes>
   </Router>
 );
