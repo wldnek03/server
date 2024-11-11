@@ -1,0 +1,55 @@
+.home {
+    padding: 20px;
+    color: white; /* 홈 화면의 기본 글씨 색상 */
+}
+
+.movie-section {
+    position: relative;
+    margin-bottom: 40px;
+}
+
+.movie-row {
+    display: flex; /* Flexbox 사용 */
+    overflow-x: auto; /* 가로 스크롤 허용 */
+    scroll-behavior: smooth; /* 스크롤 시 부드럽게 이동 */
+}
+
+.movie-row::-webkit-scrollbar {
+    display: none; /* 스크롤바 숨기기 */
+}
+
+.movie-card {
+    flex: 0 0 calc(20% - 10px); /* 한 줄에 다섯 개씩 보이도록 설정 */
+    margin-right: 10px;
+}
+
+.movie-poster {
+    width: 100%;
+}
+
+/* 스크롤 버튼 스타일 */
+.scroll-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0,0,0,0.5);
+    color: white; /* 버튼 텍스트 색상을 하얀색으로 설정 */
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.scroll-btn.left {
+    left: -40px;
+}
+
+.scroll-btn.right {
+    right: -40px;
+}
+
+/* 섹션 제목 스타일 */
+.section-title h1 {
+    color: white; /* 텍스트 색상을 하얀색으로 설정 */
+    text-align: left; /* 텍스트를 왼쪽 정렬 */
+  }
+  
