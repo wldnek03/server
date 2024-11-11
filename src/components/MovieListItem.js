@@ -1,40 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import MovieCard from './MovieCard';
+import React from 'react';
+import './MovieListItem.css'; // 리스트 아이템 스타일 파일
 
-const MovieList = () => {
-  const [movies, setMovies] = useState([]);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchMovies = async () => {
-      try {
-        const response = await fetch(
-          'https://api.themoviedb.org/3/movie/now_playing?api_key=YOUR_REAL_API_KEY'
-        );
-        if (!response.ok) {
-          throw new Error('Failed to fetch movies');
-        }
-        const data = await response.json();
-        setMovies(data.results);
-      } catch (error) {
-        setError(error.message);
-      }
-    };
-
-    fetchMovies();
-  }, []);
-
-  if (error) {
-    return <div className="error-message">Error: {error}</div>;
-  }
-
+const MovieListItem = ({ movie }) => {
   return (
-    <div className="movie-grid">
-      {movies.map((movie) => (
-        <MovieCard key={movie.id} movie={movie} />
-      ))}
+    <div className="movie-list-item">
+      <img src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`} alt={movie.title} />
+      <h3>{movie.title}</h3>
     </div>
   );
 };
 
-export default MovieList;
+export default MovieListItem;

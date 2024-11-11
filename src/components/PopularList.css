@@ -1,8 +1,9 @@
 .view-toggle {
     display: flex;
-    justify-content: flex-end;
-    margin-top: 50px;
-  }
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    margin-top: 50px; /* 상단 여백 */
+    margin-bottom: 20px; /* 하단 여백 추가 (버튼과 포스터 사이) */
+}
   
   .view-toggle button {
     background-color: #333;
@@ -20,7 +21,7 @@
   
   @media (max-width: 768px) {
     .view-toggle {
-      margin-top: 80px;
+      margin-top: 50px;
     }
   }
   /* Pagination Controls */
