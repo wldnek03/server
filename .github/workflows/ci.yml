@@ -1,0 +1,32 @@
+name: CI Workflow
+
+# 트리거: main 브랜치에 push가 발생할 때 실행
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 리포지토리 체크아웃
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Node.js 설치 (필요 시)
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      # 의존성 설치 및 빌드 실행
+      - name: Install dependencies and build
+        run: |
+          npm install
+          npm run build
+
+      # 테스트 실행
+      - name: Run tests
+        run: npm test
