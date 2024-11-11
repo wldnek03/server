@@ -1,45 +1,156 @@
-import React, { useState } from 'react';
-import MovieCard from '/Users/jiwoo/netflix-clone/src/components/MovieCard';
+import React, { useState, useEffect } from "react";
+import "./SearchMovies.css";
 
 const SearchMovies = () => {
-  const [query, setQuery] = useState('');
   const [movies, setMovies] = useState([]);
-  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState(""); // 검색어 상태
+  const [genre, setGenre] = useState(""); // 장르 필터 상태
+  const [ratingMin, setRatingMin] = useState(""); // 최소 평점 필터 상태
+  const [ratingMax, setRatingMax] = useState(""); // 최대 평점 필터 상태
+  const [language, setLanguage] = useState(""); // 언어 필터 상태
+  const [page, setPage] = useState(1); // 페이지 상태
 
-  const searchMovies = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch(
-        `https://api.themoviedb.org/3/search/movie?api_key=YOUR_API_KEY&query=${query}`
-      );
-      if (!response.ok) {
-        throw new Error('Failed to search movies');
+  const API_KEY = "a8fdc4ad0c4a3ec59dc4a0d014a5ec5a";
+  const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
+
+  // 영화 데이터를 가져오는 함수
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        // 장르와 다른 필터를 포함하여 API 요청을 보냄
+        let url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=ko-KR&page=${page}&with_genres=${genre}&with_original_language=${language}`;
+
+        // 최소 및 최대 평점이 설정되어 있으면 추가
+        if (ratingMin) url += `&vote_average.gte=${ratingMin}`;
+        if (ratingMax) url += `&vote_average.lte=${ratingMax}`;
+
+        const response = await fetch(url);
+        const data = await response.json();
+        if (page === 1) {
+          setMovies(data.results); // 첫 페이지일 경우 영화 목록을 덮어씀
+        } else {
+          setMovies((prevMovies) => [...prevMovies, ...data.results]); // 추가 페이지일 경우 영화 목록에 추가
+        }
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching movies:", error);
+        setLoading(false);
       }
-      const data = await response.json();
-      setMovies(data.results);
-      setError(null);
-    } catch (error) {
-      setError(error.message);
-    }
-  };
+    };
+
+    fetchMovies(); // 페이지가 변경될 때마다 새로운 영화 데이터를 가져옵니다.
+  }, [page, genre, ratingMin, ratingMax, language]); // 의존성 배열에 필터와 페이지 추가
+
+  // 필터링 로직 (검색어를 기준으로 필터링)
+  const filteredMovies = movies.filter((movie) =>
+    movie.title.toLowerCase().includes(filter.toLowerCase())
+  );
 
   return (
-    <div className="search-container">
-      <form onSubmit={searchMovies}>
+    <div className="container">
+      <h1>영화 검색</h1>
+      
+      {/* 검색 및 필터 설정 */}
+      <div className="filters">
         <input
           type="text"
-          placeholder="Search for movies..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          placeholder="영화 제목으로 검색..."
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)} // 검색어 업데이트
         />
-        <button type="submit">Search</button>
-      </form>
-      {error && <div className="error-message">Error: {error}</div>}
-      <div className="movie-grid">
-        {movies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} />
-        ))}
+
+        {/* 장르 선택 */}
+        <select value={genre} onChange={(e) => { setGenre(e.target.value); setPage(1); }}>
+          <option value="">장르 (전체)</option>
+          <option value="28">액션</option>
+          <option value="12">모험</option>
+          <option value="16">애니메이션</option>
+          <option value="35">코미디</option>
+          <option value="80">범죄</option>
+          {/* TMDb에서 제공하는 장르 ID를 사용 */}
+        </select>
+
+        {/* 최소 평점 선택 */}
+        <select value={ratingMin} onChange={(e) => { setRatingMin(e.target.value); setPage(1); }}>
+          <option value="">최소 평점 (전체)</option>
+          <option value="1">1 이상</option>
+          <option value="2">2 이상</option>
+          <option value="3">3 이상</option>
+          <option value="4">4 이상</option>
+          <option value="5">5 이상</option>
+          <option value="6">6 이상</option>
+          <option value="7">7 이상</option>
+          <option value="8">8 이상</option>
+          <option value="9">9 이상</option>
+        </select>
+
+        {/* 최대 평점 선택 */}
+        <select value={ratingMax} onChange={(e) => { setRatingMax(e.target.value); setPage(1); }}>
+          <option value="">최대 평점 (전체)</option>
+          <option value="10">10 이하</option>
+          <option value="9">9 이하</option>
+          <option value="8">8 이하</option>
+          <option value="7">7 이하</option>
+          <option value="6">6 이하</option>
+          <option value="5">5 이하</option>
+          <option value="4">4 이하</option>
+          <option value="3">3 이하</option>
+        </select>
+
+        {/* 언어 선택 */}
+        <select value={language} onChange={(e) => { setLanguage(e.target.value); setPage(1); }}>
+          <option value="">언어 (전체)</option>
+          <option value="en">영어</option>
+          <option value="ko">한국어</option>
+          <option value="ja">일본어</option>
+          {/* 필요에 따라 더 많은 언어 추가 가능 */}
+        </select>
+
+        {/* 초기화 버튼 */}
+        <button onClick={() => { 
+            setFilter(""); 
+            setGenre(""); 
+            setRatingMin(""); 
+            setRatingMax("");
+            setLanguage(""); 
+            setPage(1); 
+            // fetchMovies() 대신 필터 값을 초기화하면 useEffect가 실행됨.
+        }}>
+          초기화
+        </button>
       </div>
+
+      {/* 영화 목록 표시 */}
+      {loading ? (
+        <p>로딩 중...</p>
+      ) : (
+        <>
+          <div className="movie-list">
+            {filteredMovies.length > 0 ? (
+              filteredMovies.map((movie) => (
+                <div className="movie-item" key={movie.id}>
+                  <img
+                    src={`${IMAGE_BASE_URL}${movie.poster_path}`}
+                    alt={movie.title}
+                  />
+                  <p>{movie.title}</p>
+                  <p>{movie.release_date}</p>
+                </div>
+              ))
+            ) : (
+              <p>검색 결과가 없습니다.</p>
+            )}
+          </div>
+
+          {/* 더 많은 영화 로드 버튼 */}
+          {movies.length > 0 && (
+            <button className="load-more" onClick={() => setPage(page + 1)}>
+              더 보기
+            </button>
+          )}
+        </>
+      )}
     </div>
   );
 };

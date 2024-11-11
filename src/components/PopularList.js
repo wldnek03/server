@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import MovieCard from './MovieCard'; // 그리드 뷰에서 사용
 import MovieListItem from './MovieListItem'; // 리스트 뷰에서 사용할 새로운 컴포넌트
 import './PopularList.css'; // 스타일 파일
-import { fetchMovies } from '/Users/jiwoo/netflix-clone/src/services/api'; // API 호출 함수
+import { fetchMovies } from '../services/api'; // API 호출 함수
 import Header from './Header';
 
 const PopularList = () => {
