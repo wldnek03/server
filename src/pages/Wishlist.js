@@ -11,12 +11,12 @@ const Wishlist = () => {
     fetchLikedMovies(savedLikes);
   }, []);
 
-  // 좋아요한 영화 ID로부터 영화 데이터를 불러오는 함수 (예시)
+  // 좋아요한 영화 ID로부터 영화 데이터를 불러오는 함수
   const fetchLikedMovies = async (likedMovieIds) => {
     try {
       const movieData = await Promise.all(
         likedMovieIds.map(async (id) => {
-          const response = await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=a8fdc4ad0c4a3ec59dc4a0d014a5ec5a`);
+          const response = await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=a8fdc4ad0c4a3ec59dc4a0d014a5ec5a&language=ko-KR`);
           const data = await response.json();
           return data;
         })

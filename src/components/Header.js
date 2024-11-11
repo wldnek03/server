@@ -9,6 +9,7 @@ const Header = () => (
       <Link to="/">🎬 Joo movie</Link>
     </div>
     <nav>
+      <Link to="/">Home</Link>
       <Link to="/popular">Popular</Link>
       <Link to="/search">Search</Link>
       <Link to="/wishlist">Wishlist</Link>
