@@ -1,13 +1,16 @@
 name: Deploy website to GitHub Pages
 
+env:
+  WC_HUGO_VERSION: '0.124.1'
+
 on:
-  # main 브랜치에 푸시될 때 워크플로우를 트리거
+  # Trigger the workflow every time you push to the `main` branch
   push:
     branches: ["main"]
-  # GitHub Actions 탭에서 수동으로 워크플로우 실행 가능
+  # Allows you to run this workflow manually from the Actions tab on GitHub.
   workflow_dispatch:
 
-# 리포지토리를 클론하고 GitHub Pages에 배포할 권한 부여
+# Provide permission to clone the repo and deploy it to GitHub Pages
 permissions:
   contents: read
   pages: write
@@ -18,63 +21,50 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # 웹사이트 빌드 작업
+  # Build website
   build:
+    if: github.repository_owner != 'HugoBlox'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      # 필요 시 빌드 과정 추가 (예시로 React 프로젝트 빌드)
-      - name: Install dependencies
-        run: npm install
-      
-      - name: Build project
-        run: npm run build
-
+        with:
+          # Fetch history for Hugo's .GitInfo and .Lastmod
+          fetch-depth: 0
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: ${{ env.WC_HUGO_VERSION }}
+          extended: true
+      - uses: actions/cache@v4
+        with:
+          path: /tmp/hugo_cache_runner/
+          key: ${{ runner.os }}-hugomod-${{ hashFiles('**/go.mod') }}
+          restore-keys: |
+            ${{ runner.os }}-hugomod-
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
-
+      - name: Build with Hugo
+        env:
+          HUGO_ENVIRONMENT: production
+        run: |
+          echo "Hugo Cache Dir: $(hugo config | grep cachedir)"
+          hugo --minify --baseURL "${{ steps.pages.outputs.base_url }}/"
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./public  # 배포할 정적 파일들이 위치한 경로 (예시로 'public' 폴더)
+          path: ./public
 
-  # 로컬 서버 실행 및 테스트 작업
+  # Deploy website to GitHub Pages hosting
   deploy:
+    if: github.repository_owner != 'HugoBlox'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build project
-        run: npm run build
-
-      - name: Start local server
-        run: |
-          npm install -g serve
-          serve -s build -l 3000 &
-        env:
-          CI: false
-
-      # 서버가 시작될 시간을 충분히 기다림 (20초로 설정)
-      - name: Wait for server to start
-        run: sleep 20
-
-      # curl을 사용하여 서버가 제대로 실행되었는지 확인 (실패 시 워크플로우 종료)
-      - name: Check if server is running
-        run: curl --fail http://localhost:3000 || exit 1
-
-      # 추가적인 서버 상태 확인 (선택 사항)
-      - name: Display server status
-        run: curl http://localhost:3000 
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
