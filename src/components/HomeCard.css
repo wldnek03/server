@@ -4,7 +4,7 @@
   flex: 0 0 calc(20% - 10px); /* 한 줄에 다섯 개씩 보이도록 설정 */
   margin-right: 10px;
   overflow: hidden; /* 부모 요소에서 넘치는 부분 숨김 */
-  background-color: black; /* 부모 요소 배경색을 검정으로 설정 */
+  background-color: #141414;
 }
 
 /* 포스터 이미지 스타일 */
@@ -22,4 +22,12 @@
   right: 10px;
   font-size: 24px;
   color: red;
+}
+
+/* 영화 제목 스타일 */
+.movie-title {
+  font-size: 1rem; /* 제목 크기 */
+  color: white; /* 텍스트 색상 */
+  text-align: center; /* 중앙 정렬 */
+  margin-top: 10px; /* 이미지와의 간격 */
 }

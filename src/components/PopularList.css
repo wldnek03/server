@@ -1,8 +1,14 @@
+/* 헤더 높이만큼의 상단 여백 추가 */
+.main-content {
+  margin-top: 120px; /* 헤더 높이만큼 마진 추가 (기존보다 더 여유롭게) */
+}
+
+/* View-toggle 스타일 */
 .view-toggle {
   display: flex;
   justify-content: flex-end; /* 오른쪽 정렬 */
   margin-top: 50px; /* 상단 여백 */
-  margin-bottom: 20px; /* 하단 여백 추가 (버튼과 포스터 사이) */
+  margin-bottom: 20px;
 }
 
 .view-toggle button {
@@ -10,6 +16,8 @@
   color: white;
   border: none;
   padding: 10px 15px;
+  margin-top: 60px; /* 헤더 아래로 충분한 공간 확보 */
+  margin-bottom: 20px; 
   margin-left: 10px;
   cursor: pointer;
   border-radius: 4px;
@@ -19,19 +27,12 @@
   background-color: #535bf2;
 }
 
-@media (max-width: 768px) {
-  .view-toggle {
-      margin-top: 50px;
-  }
-}
-
 /* Pagination Controls */
 .pagination {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
-  padding: 10px; /* 패딩 추가 */
+  margin-top: 20px; /* 상단 여백 */
 }
 
 .pagination button {
@@ -39,9 +40,6 @@
   color: white;
   border: none;
   padding: 15px; /* 버튼 크기 증가 */
-  margin: 0 20px; /* 여백 증가 */
-  cursor: pointer;
-  z-index: 1; /* z-index 추가 */
 }
 
 .pagination button:hover {
@@ -59,55 +57,14 @@
 /* 영화 리스트 아이템 스타일 */
 .movie-list-item {
   position: relative;
-  width: 200px; /* 모든 포스터의 너비를 고정 */
-  height: 350px; /* 포스터와 제목을 포함한 높이 */
-  margin: 10px; /* 포스터 간격 추가 */
-  overflow: hidden; /* 이미지가 넘칠 경우 숨김 처리 */
-  transition: transform 0.3s ease; /* 부드러운 전환 효과 */
-}
-
-.movie-list-item:hover {
-  transform: scale(1.05); /* 마우스를 올렸을 때 확대 */
-  cursor: pointer; /* 커서를 손 모양으로 변경 */
-}
-
-/* 포스터 이미지 스타일 */
-.movie-list-item img {
-  width: 100%; /* 부모 요소의 너비에 맞게 이미지 크기 조정 */
-  height: 85%; /* 부모 요소의 높이에 맞게 이미지 크기 조정 (85%로 설정) */
-  object-fit: cover; /* 이미지 비율을 유지하면서 부모 크기에 맞게 자름 */
-}
-
-/* 영화 제목 스타일 */
-.movie-list-item h3 {
-  margin-top: 5px;
-  text-align: center;
-  color: white;
-  font-size: 1rem;
+  width: 200px; 
+  height: auto; 
 }
 
 /* 영화 목록 그리드 배치 스타일 */
 .movie-list {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.wishlist-container {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);  /* 한 줄에 5개씩 배치 */
-  gap: 20px;  /* 아이템 사이의 간격 */
-  padding: 20px;
-}
-
-.movie-list-item {
-  background-color: #333; /* 영화 아이템의 배경색 */
-  border-radius: 5px;  /* 모서리를 둥글게 */
-  overflow: hidden;  /* 내용이 넘치지 않도록 */
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* 그림자 효과 */
-}
-
-.movie-list-item img {
-  width: 100%;  /* 이미지가 컨테이너에 맞게 조절됨 */
-  height: auto;  /* 비율 유지 */
+   display: flex;
+   justify-content: center;
+   flex-wrap: wrap;
+   margin-top: 30px; /* 영화 목록 상단 여백 추가 */
 }

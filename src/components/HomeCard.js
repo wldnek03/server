@@ -29,9 +29,10 @@ const HomeCard = ({ movie }) => {
         {/* 포스터 이미지 */}
         <img 
           src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} 
-          alt= " "
+          alt= {movie.title}
         />
         {/* 좋아요 아이콘 */}
+        <h3 className="movie-title">{movie.title}</h3>
         {liked && <span className="like-icon">❤️</span>}
       </div>
     </div>

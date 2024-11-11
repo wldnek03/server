@@ -1,5 +1,6 @@
 .home {
     padding: 20px;
+    background-color: #141414;
     color: white; /* 홈 화면의 기본 글씨 색상 */
 }
 
@@ -21,6 +22,7 @@
 .movie-card {
     flex: 0 0 calc(20% - 10px); /* 한 줄에 다섯 개씩 보이도록 설정 */
     margin-right: 10px;
+    background-color: #141414;
 }
 
 .movie-poster {
@@ -41,6 +43,7 @@
 
 .scroll-btn.left {
     left: -40px;
+    
 }
 
 .scroll-btn.right {
@@ -60,7 +63,7 @@
     color: white; /* 텍스트 색상 하얀색으로 설정 */
     display: flex;
     align-items: flex-end; /* 내용이 하단에 위치하도록 설정 */
-    padding: 20px;
+    padding: 40px;
 }
 
 .banner-content {
@@ -68,14 +71,17 @@
 }
 
 .banner h1 {
-    font-size: 3rem; /* 제목 크기 설정 */
+    font-size: 2.5rem; /* 제목 크기 설정 */
+    color: white;
     margin-bottom: 20px;
+    text-align: left;
 }
 
 .banner p {
-    font-size: 1.2rem; /* 설명 텍스트 크기 설정 */
+    font-size: 0.9rem; /* 설명 텍스트 크기 설정 */
     line-height: 1.5;
     margin-bottom: 20px;
+    
 }
 
 /* 배너 버튼 스타일 */

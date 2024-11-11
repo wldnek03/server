@@ -53,7 +53,6 @@ const SearchMovies = () => {
       {/* 헤더 컴포넌트 추가 */}
       <Header />
 
-      <h1>영화 검색</h1>
       
       {/* 검색 및 필터 설정 */}
       <div className="filters">
