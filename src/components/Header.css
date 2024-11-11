@@ -1,14 +1,29 @@
+/* Header 스타일 */
 .header {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 20px;
-    background: #141414;
-    color: white;
-  }
-  
-  .header a {
-    color: white;
-    text-decoration: none;
-    margin-right: 15px;
-  }
-  
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* 세로 가운데 정렬 */
+  padding: 20px 40px; /* 패딩을 늘려서 헤더가 더 넓어지도록 */
+  background: #141414;
+  color: white;
+}
+
+.header a {
+  color: white;
+  text-decoration: none;
+  margin-right: 25px; /* 링크 간격을 더 넓게 */
+  font-size: 18px; /* 링크 텍스트 크기 증가 */
+}
+
+.header img {
+  width: 30px; /* 아이콘 크기 조정 */
+}
+
+.header .nav-links {
+  display: flex;
+  gap: 20px; /* 링크 간격을 일정하게 유지 */
+}
+
+.header .user-icon {
+  font-size: 24px; /* 사용자 아이콘 크기 증가 */
+}

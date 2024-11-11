@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./SearchMovies.css";
+import Header from '../components/Header'; // 헤더 컴포넌트 가져오기
 
 const SearchMovies = () => {
   const [movies, setMovies] = useState([]);
@@ -49,6 +50,9 @@ const SearchMovies = () => {
 
   return (
     <div className="container">
+      {/* 헤더 컴포넌트 추가 */}
+      <Header />
+
       <h1>영화 검색</h1>
       
       {/* 검색 및 필터 설정 */}
