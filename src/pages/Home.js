@@ -46,12 +46,22 @@ const Home = () => {
     getComedyMovies();
   }, []);
 
+  // Scroll functions for movie sections
   const scrollLeft = (id) => {
     document.getElementById(id).scrollLeft -= 300;
   };
 
   const scrollRight = (id) => {
     document.getElementById(id).scrollLeft += 300;
+  };
+
+  // Functionality for Play and Info buttons
+  const handlePlayClick = () => {
+    alert(`Playing ${featuredMovie.title}!`);
+  };
+
+  const handleInfoClick = () => {
+    alert(`More info about ${featuredMovie.title}: ${featuredMovie.overview}`);
   };
 
   return (
@@ -65,8 +75,8 @@ const Home = () => {
             <h1>{featuredMovie.title}</h1>
             <p>{featuredMovie.overview}</p>
             <div className="banner-buttons">
-              <button className="play-btn">재생</button>
-              <button className="info-btn">상세 정보</button>
+              <button className="play-btn" onClick={handlePlayClick}>재생</button>
+              <button className="info-btn" onClick={handleInfoClick}>상세 정보</button>
             </div>
           </div>
         </div>
