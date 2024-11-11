@@ -12,6 +12,7 @@ const PopularList = () => {
     const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 번호
     const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
     const [isFetchingMore, setIsFetchingMore] = useState(false); // 무한 스크롤 상태
+    const [showTopButton, setShowTopButton] = useState(false); // Scroll to Top 버튼 상태
 
     // 영화 데이터를 가져오는 함수
     const fetchPopularMovies = async (page, resetMovies = false) => {
@@ -63,7 +64,7 @@ const PopularList = () => {
         }
     };
 
-    // 무한 스크롤 핸들러
+    // 무한 스크롤 핸들러 및 Scroll to Top 버튼 표시 핸들러
     const handleScroll = useCallback(() => {
         if (
             window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 &&
@@ -76,7 +77,19 @@ const PopularList = () => {
                 setIsFetchingMore(false);
             }
         }
+
+        // Scroll to Top 버튼 표시 여부 결정
+        if (window.scrollY > 300) {  // 스크롤이 300px 이상 내려가면 버튼 표시
+            setShowTopButton(true);
+        } else {
+            setShowTopButton(false);
+        }
     }, [currentPage, totalPages, isFetchingMore, currentView]);
+
+    // Scroll to Top 기능 구현
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
     useEffect(() => {
         if (currentView === 'list') {
@@ -150,6 +163,13 @@ const PopularList = () => {
                         다음
                     </button>
                 </div>
+            )}
+
+            {/* Scroll to Top Button - 리스트 뷰에서만 표시 */}
+            {showTopButton && currentView === 'list' && (
+                <button className="scroll-to-top" onClick={scrollToTop}>
+                    Top
+                </button>
             )}
         </div>
     );

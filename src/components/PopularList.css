@@ -68,3 +68,19 @@
    flex-wrap: wrap;
    margin-top: 30px; /* 영화 목록 상단 여백 추가 */
 }
+.scroll-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px;
+  background-color: #ef1616;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.scroll-to-top:hover {
+  background-color: #ef1616;
+}
