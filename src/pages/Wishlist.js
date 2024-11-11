@@ -1,60 +1,44 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { getFromLocalStorage } from '../utils/localStorage';
-import './Wishlist.css';
-import Header from '../components/Header'; // Header 컴포넌트 임포트
+// localStorage에서 wishlist 불러오기
+let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
 
-const MovieWishlist = () => {
-  const [wishlistMovies, setWishlistMovies] = useState([]);
-  const [isMobile] = useState(window.innerWidth <= 768);
-
-  const updateVisibleMovies = useCallback((movies) => {
-    console.log('Updating visible movies');
-  }, []);
-
-  const calculateLayout = useCallback(() => {
-    const containerWidth = window.innerWidth;
-    const movieCardWidth = isMobile ? 90 : 220;
-    const horizontalGap = isMobile ? 10 : 15;
-
-    Math.floor(containerWidth / (movieCardWidth + horizontalGap));
-
-    updateVisibleMovies(wishlistMovies);
-  }, [isMobile, wishlistMovies, updateVisibleMovies]);
-
-  useEffect(() => {
-    const savedWishlist = getFromLocalStorage('movieWishlist') || [];
-    setWishlistMovies(savedWishlist);
-    updateVisibleMovies(savedWishlist);
-  }, [updateVisibleMovies]);
-
-  useEffect(() => {
-    window.addEventListener('resize', calculateLayout);
-
-    return () => window.removeEventListener('resize', calculateLayout);
-  }, [calculateLayout]);
-
-  return (
-    <div>
-      {/* Header 컴포넌트를 추가 */}
-      <Header />
-
-      {/* 위시리스트 콘텐츠 */}
-      <div className="wishlist">
-        {wishlistMovies.length > 0 ? (
-          <div className="movie-list">
-            {wishlistMovies.map((movie) => (
-              <div key={movie.id} className="movie-card">
-                <h3>{movie.title}</h3>
-                <p>{movie.year}</p>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p>위시리스트가 비어있습니다.</p>
-        )}
-      </div>
-    </div>
-  );
+// 페이지 로드 시 기존 wishlist 표시
+window.onload = function() {
+  displayWishlist();
 };
 
-export default MovieWishlist;
+// 영화 포스터 클릭 이벤트 설정
+document.querySelectorAll('.movie-poster').forEach(poster => {
+  poster.addEventListener('click', function() {
+    const movieElement = this.parentElement;
+    const movieId = movieElement.getAttribute('data-id');
+    
+    // 이미 wishlist에 있는지 확인
+    if (!wishlist.includes(movieId)) {
+      // wishlist에 추가
+      wishlist.push(movieId);
+      
+      // localStorage에 저장
+      localStorage.setItem('wishlist', JSON.stringify(wishlist));
+
+      // 따봉 표시 및 wishlist 업데이트
+      movieElement.querySelector('.thumbs-up').style.display = 'inline';
+      addToWishlist(movieId);
+    }
+  });
+});
+
+// Wishlist에 영화 추가 함수
+function addToWishlist(movieId) {
+  const wishlistElement = document.getElementById('wishlist');
+  
+  // 영화 정보를 가져와서 추가 (여기서는 간단히 ID만 표시)
+  const listItem = document.createElement('li');
+  listItem.textContent = `영화 ID: ${movieId}`;
+  
+  wishlistElement.appendChild(listItem);
+}
+
+// Wishlist 표시 함수 (페이지 로드 시 호출)
+function displayWishlist() {
+  wishlist.forEach(movieId => addToWishlist(movieId));
+}
