@@ -1,44 +1,51 @@
-// localStorage에서 wishlist 불러오기
-let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+import React, { useState, useEffect } from 'react';
+import MovieListItem from '../components/MovieListItem'; // MovieListItem 컴포넌트 임포트
+import Header from '../components/Header'; // Header 컴포넌트 임포트
 
-// 페이지 로드 시 기존 wishlist 표시
-window.onload = function() {
-  displayWishlist();
+const Wishlist = () => {
+  const [wishlistMovies, setWishlistMovies] = useState([]);
+
+  // localStorage에서 좋아요한 영화 목록 불러오기
+  useEffect(() => {
+    const savedLikes = JSON.parse(localStorage.getItem('likedMovies')) || [];
+    fetchLikedMovies(savedLikes);
+  }, []);
+
+  // 좋아요한 영화 ID로부터 영화 데이터를 불러오는 함수 (예시)
+  const fetchLikedMovies = async (likedMovieIds) => {
+    try {
+      const movieData = await Promise.all(
+        likedMovieIds.map(async (id) => {
+          const response = await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=a8fdc4ad0c4a3ec59dc4a0d014a5ec5a`);
+          const data = await response.json();
+          return data;
+        })
+      );
+      setWishlistMovies(movieData);
+    } catch (error) {
+      console.error('Error fetching liked movies:', error);
+    }
+  };
+
+  return (
+    <div>
+      {/* Header 컴포넌트를 페이지 상단에 추가 */}
+      <Header />
+
+      <h1 style={{ color: 'orange', fontSize: '2rem' }}>My Wishlist</h1>
+
+      {/* 위시리스트에 있는 영화들을 MovieListItem으로 렌더링 */}
+      <div className="wishlist-container">
+        {wishlistMovies.length > 0 ? (
+          wishlistMovies.map((movie) => (
+            <MovieListItem key={movie.id} movie={movie} />
+          ))
+        ) : (
+          <p>위시리스트에 추가된 영화가 없습니다.</p>
+        )}
+      </div>
+    </div>
+  );
 };
 
-// 영화 포스터 클릭 이벤트 설정
-document.querySelectorAll('.movie-poster').forEach(poster => {
-  poster.addEventListener('click', function() {
-    const movieElement = this.parentElement;
-    const movieId = movieElement.getAttribute('data-id');
-    
-    // 이미 wishlist에 있는지 확인
-    if (!wishlist.includes(movieId)) {
-      // wishlist에 추가
-      wishlist.push(movieId);
-      
-      // localStorage에 저장
-      localStorage.setItem('wishlist', JSON.stringify(wishlist));
-
-      // 따봉 표시 및 wishlist 업데이트
-      movieElement.querySelector('.thumbs-up').style.display = 'inline';
-      addToWishlist(movieId);
-    }
-  });
-});
-
-// Wishlist에 영화 추가 함수
-function addToWishlist(movieId) {
-  const wishlistElement = document.getElementById('wishlist');
-  
-  // 영화 정보를 가져와서 추가 (여기서는 간단히 ID만 표시)
-  const listItem = document.createElement('li');
-  listItem.textContent = `영화 ID: ${movieId}`;
-  
-  wishlistElement.appendChild(listItem);
-}
-
-// Wishlist 표시 함수 (페이지 로드 시 호출)
-function displayWishlist() {
-  wishlist.forEach(movieId => addToWishlist(movieId));
-}
+export default Wishlist;

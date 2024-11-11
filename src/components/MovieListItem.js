@@ -28,9 +28,14 @@ const MovieListItem = ({ movie, onPosterClick = () => {} }) => {
     onPosterClick(movie);
   };
 
+  // 포스터 경로가 없을 경우 대체 이미지 사용
+  const posterUrl = movie.poster_path
+    ? `https://image.tmdb.org/t/p/w200${movie.poster_path}`
+    : 'https://via.placeholder.com/200x300?text=No+Image';
+
   return (
     <div className="movie-list-item" onClick={handlePosterClick}>
-      <img src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`} alt={movie.title} />
+      <img src={posterUrl} alt={movie.title} />
       <h3>{movie.title}</h3>
       {/* liked 값에 따라 하트 아이콘 표시 */}
       {liked && <span className="like-icon">❤️</span>}
