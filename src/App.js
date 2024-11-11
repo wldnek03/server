@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import PopularList from './components/PopularList';
 import SearchMovies from './pages/SearchMovies';
 import SignIn from './pages/SignIn';
+import Wishlist from './pages/Wishlist';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Route path="/popular" element={<PopularList/>} />
           <Route path="/search" element={<SearchMovies/>} />
           <Route path="/signin" element={<SignIn/>} />
+          <Route path="/wishlist" element={<Wishlist/>} />
       </Routes>
     </Router>
   );

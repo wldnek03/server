@@ -3,7 +3,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center; /* 세로 가운데 정렬 */
-  padding: 20px 40px; /* 패딩을 늘려서 헤더가 더 넓어지도록 */
+  padding: 25px 30px; /* 패딩을 늘려서 헤더가 더 넓어지도록 */
   background: #141414;
   color: white;
 }

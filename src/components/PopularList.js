@@ -13,6 +13,7 @@ const PopularList = () => {
     const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
     const [isFetchingMore, setIsFetchingMore] = useState(false); // 무한 스크롤 상태
 
+    // 영화 데이터를 가져오는 함수
     const fetchPopularMovies = async (page, resetMovies = false) => {
         try {
             const data = await fetchMovies(`/movie/popular?page=${page}`);
@@ -30,35 +31,39 @@ const PopularList = () => {
         }
     };
 
+    // 초기 데이터 로드 및 currentView 변경 시 데이터 리셋
     useEffect(() => {
         fetchPopularMovies(currentPage, currentView === 'grid');
     }, [currentPage, currentView]);
 
+    // 뷰 변경 핸들러
     const handleViewChange = (view) => {
         setCurrentView(view);
+        setMovies([]);  // 기존 영화 목록 초기화
 
         if (view === 'grid') {
-            setMovies([]);
-            fetchPopularMovies(1, true);
+            fetchPopularMovies(1, true);  // 초기 페이지로 다시 로드
             setCurrentPage(1);
         } else if (view === 'list') {
-            setMovies([]);
-            setCurrentPage(1);
+            setCurrentPage(1);  // 리스트 뷰로 전환 시 페이지 초기화
         }
     };
 
+    // 다음 페이지로 이동하는 함수
     const handleNextPage = () => {
         if (currentPage < totalPages) {
             setCurrentPage(currentPage + 1);
         }
     };
 
+    // 이전 페이지로 이동하는 함수
     const handlePrevPage = () => {
         if (currentPage > 1) {
             setCurrentPage(currentPage - 1);
         }
     };
 
+    // 무한 스크롤 핸들러
     const handleScroll = useCallback(() => {
         if (
             window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 &&
@@ -90,18 +95,20 @@ const PopularList = () => {
     return (
         <div className="popular-container">
             <Header />
+            
+            {/* View Toggle Buttons */}
             <div className="view-toggle">
                 <button
                     onClick={() => handleViewChange('grid')}
                     className={currentView === 'grid' ? 'active' : ''}
                 >
-                    <i className="fa fa-th"></i> Grid View
+                    <i className="fa fa-th"></i> 그리드 보기
                 </button>
                 <button
                     onClick={() => handleViewChange('list')}
                     className={currentView === 'list' ? 'active' : ''}
                 >
-                    <i className="fa fa-list"></i> List View
+                    <i className="fa fa-list"></i> 리스트 보기
                 </button>
             </div>
 
