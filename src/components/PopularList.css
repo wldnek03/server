@@ -1,0 +1,56 @@
+.view-toggle {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 50px;
+  }
+  
+  .view-toggle button {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin-left: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .view-toggle button.active {
+    background-color: #535bf2;
+  }
+  
+  @media (max-width: 768px) {
+    .view-toggle {
+      margin-top: 80px;
+    }
+  }
+  /* Pagination Controls */
+/* Pagination Controls */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    padding: 10px; /* 패딩 추가 */
+  }
+
+  .pagination button {
+    background-color: #007bff; /* 밝은 파란색으로 변경 */
+    color: white;
+    border: none;
+    padding: 15px; /* 버튼 크기 증가 */
+    margin: 0 20px; /* 여백 증가 */
+    cursor: pointer;
+    z-index: 1; /* z-index 추가 */
+  }
+
+  .pagination button:hover {
+      background-color: #0056b3; /* 호버 시 색상 변경 */
+  }
+
+  .pagination button:disabled {
+      background-color: #555; /* Disabled 상태일 때 색상 */
+  }
+
+  .pagination span {
+      color: white;
+  }
