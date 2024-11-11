@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import MovieCard from './MovieCard';
+import MovieCard from '/Users/jiwoo/netflix-clone/src/components/MovieCard';
 
-const MovieList = () => {
+const PopularList = () => {
   const [movies, setMovies] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const response = await fetch(
-          'https://api.themoviedb.org/3/movie/now_playing?api_key=YOUR_REAL_API_KEY'
-        );
+        const response = await fetch('https://api.themoviedb.org/3/movie/popular?api_key=a8fdc4ad0c4a3ec59dc4a0d014a5ec5a');
         if (!response.ok) {
-          throw new Error('Failed to fetch movies');
+          throw new Error('Failed to fetch popular movies');
         }
         const data = await response.json();
         setMovies(data.results);
@@ -37,4 +35,4 @@ const MovieList = () => {
   );
 };
 
-export default MovieList;
+export default PopularList;
