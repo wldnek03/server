@@ -2,8 +2,9 @@ import React, { useState, useEffect, useCallback } from 'react';
 import MovieCard from './MovieCard'; // 그리드 뷰에서 사용
 import MovieListItem from './MovieListItem'; // 리스트 뷰에서 사용할 새로운 컴포넌트
 import './PopularList.css'; // 스타일 파일
-import { fetchMovies } from '../services/api'; // API 호출 함수
+import endpoints from '../url'; // url.js에서 엔드포인트 가져오기
 import Header from './Header';
+import axios from 'axios'; // axios로 API 호출
 
 const PopularList = () => {
     const [movies, setMovies] = useState([]);
@@ -17,7 +18,8 @@ const PopularList = () => {
     // 영화 데이터를 가져오는 함수
     const fetchPopularMovies = async (page, resetMovies = false) => {
         try {
-            const data = await fetchMovies(`/movie/popular?page=${page}`);
+            const response = await axios.get(endpoints.popularMovies(page));  // url.js에서 엔드포인트 사용
+            const data = response.data;
             console.log(data);
 
             if (resetMovies) {

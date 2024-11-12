@@ -5,16 +5,36 @@ import PopularList from './components/PopularList';
 import SearchMovies from './pages/SearchMovies';
 import SignIn from './pages/SignIn';
 import Wishlist from './pages/Wishlist';
+import ProtectedRoute from './components/ProtectedRoute'; // Import the ProtectedRoute component
+import MovieDetail from './pages/MovieDetail';
 
 function App() {
   return (
     <Router>
       <Routes>
+        {/* Public routes */}
         <Route path="/" element={<Home />} />
-          <Route path="/popular" element={<PopularList/>} />
-          <Route path="/search" element={<SearchMovies/>} />
-          <Route path="/signin" element={<SignIn/>} />
-          <Route path="/wishlist" element={<Wishlist/>} />
+        <Route path="/search" element={<SearchMovies />} />
+        <Route path="/movie/:id" component={<MovieDetail/>} /> 
+        <Route path="/signin" element={<SignIn />} />
+
+        {/* Protected routes */}
+        <Route 
+          path="/popular" 
+          element={
+            <ProtectedRoute>
+              <PopularList />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/wishlist" 
+          element={
+            <ProtectedRoute>
+              <Wishlist />
+            </ProtectedRoute>
+          } 
+        />
       </Routes>
     </Router>
   );

@@ -1,31 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import MovieListItem from '../components/MovieListItem'; // MovieListItem 컴포넌트 임포트
 import Header from '../components/Header'; // Header 컴포넌트 임포트
+import { getLikedMoviesFromLocalStorage } from '../utils/localStorage'; // 유틸리티 함수 임포트
 
 const Wishlist = () => {
   const [wishlistMovies, setWishlistMovies] = useState([]);
 
   // localStorage에서 좋아요한 영화 목록 불러오기
   useEffect(() => {
-    const savedLikes = JSON.parse(localStorage.getItem('likedMovies')) || [];
-    fetchLikedMovies(savedLikes);
+    const savedLikes = getLikedMoviesFromLocalStorage(); // 유틸리티 함수 사용
+    setWishlistMovies(savedLikes); // 저장된 전체 영화를 상태로 설정
   }, []);
-
-  // 좋아요한 영화 ID로부터 영화 데이터를 불러오는 함수
-  const fetchLikedMovies = async (likedMovieIds) => {
-    try {
-      const movieData = await Promise.all(
-        likedMovieIds.map(async (id) => {
-          const response = await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=a8fdc4ad0c4a3ec59dc4a0d014a5ec5a&language=ko-KR`);
-          const data = await response.json();
-          return data;
-        })
-      );
-      setWishlistMovies(movieData);
-    } catch (error) {
-      console.error('Error fetching liked movies:', error);
-    }
-  };
 
   return (
     <div>

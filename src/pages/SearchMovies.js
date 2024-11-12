@@ -10,9 +10,10 @@ const SearchMovies = () => {
   const [ratingMin, setRatingMin] = useState(""); // 최소 평점 필터 상태
   const [ratingMax, setRatingMax] = useState(""); // 최대 평점 필터 상태
   const [language, setLanguage] = useState(""); // 언어 필터 상태
+  const [sortBy, setSortBy] = useState(""); // 정렬 필터 상태
   const [page, setPage] = useState(1); // 페이지 상태
 
-  const API_KEY = "a8fdc4ad0c4a3ec59dc4a0d014a5ec5a";
+  const API_KEY = process.env.REACT_APP_TMDB_API_KEY; // .env 파일에서 API 키 가져오기
   const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 
   // 영화 데이터를 가져오는 함수
@@ -23,6 +24,7 @@ const SearchMovies = () => {
 
         if (ratingMin) url += `&vote_average.gte=${ratingMin}`;
         if (ratingMax) url += `&vote_average.lte=${ratingMax}`;
+        if (sortBy) url += `&sort_by=${sortBy}`; // 정렬 추가
 
         const response = await fetch(url);
         const data = await response.json();
@@ -39,7 +41,7 @@ const SearchMovies = () => {
     };
 
     fetchMovies();
-  }, [page, genre, ratingMin, ratingMax, language]);
+  }, [page, genre, ratingMin, ratingMax, language, sortBy, API_KEY]); // API_KEY 추가
 
   // 필터링 로직 (검색어를 기준으로 필터링)
   const filteredMovies = movies.filter((movie) =>
@@ -104,13 +106,25 @@ const SearchMovies = () => {
           <option value="ja">일본어</option>
         </select>
 
+        {/* 정렬 기준 선택 */}
+        <select value={sortBy} onChange={(e) => { setSortBy(e.target.value); setPage(1); }}>
+          <option value="">정렬 기준 (기본값)</option>
+          <option value="popularity.desc">인기순 (내림차순)</option>
+          <option value="popularity.asc">인기순 (오름차순)</option>
+          <option value="release_date.desc">개봉일순 (최신순)</option>
+          <option value="release_date.asc">개봉일순 (오래된 순)</option>
+          <option value="vote_average.desc">평점순 (높은 순)</option>
+          <option value="vote_average.asc">평점순 (낮은 순)</option>
+        </select>
+
         {/* 초기화 버튼 */}
         <button onClick={() => { 
             setFilter(""); 
             setGenre(""); 
             setRatingMin(""); 
             setRatingMax("");
-            setLanguage(""); 
+            setLanguage("");
+            setSortBy(""); // 정렬 초기화
             setPage(1);
         }}>
           초기화

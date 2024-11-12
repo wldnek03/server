@@ -1,22 +1,23 @@
-import React, { useState } from 'react'; // useEffect 제거
+import React, { useState } from 'react';
 import './MovieCard.css';
+import { saveLikedMoviesToLocalStorage, getLikedMoviesFromLocalStorage } from '../utils/localStorage'; // 로컬 스토리지 함수 임포트
 
 const MovieCard = ({ movie }) => {
   const [liked, setLiked] = useState(() => {
-    const savedLikes = JSON.parse(localStorage.getItem('likedMovies')) || [];
-    return savedLikes.includes(movie.id);
+    const savedLikes = getLikedMoviesFromLocalStorage();
+    return savedLikes.some(savedMovie => savedMovie.id === movie.id);
   });
 
   const handleLikeClick = () => {
-    const savedLikes = JSON.parse(localStorage.getItem('likedMovies')) || [];
+    const savedLikes = getLikedMoviesFromLocalStorage();
 
-    if (!savedLikes.includes(movie.id)) {
-      const updatedLikes = [...savedLikes, movie.id];
-      localStorage.setItem('likedMovies', JSON.stringify(updatedLikes));
+    if (!savedLikes.some(savedMovie => savedMovie.id === movie.id)) {
+      const updatedLikes = [...savedLikes, movie]; // 영화 전체 데이터를 추가
+      saveLikedMoviesToLocalStorage(updatedLikes); // 로컬 스토리지에 저장
       setLiked(true);
     } else {
-      const updatedLikes = savedLikes.filter(id => id !== movie.id);
-      localStorage.setItem('likedMovies', JSON.stringify(updatedLikes));
+      const updatedLikes = savedLikes.filter(savedMovie => savedMovie.id !== movie.id);
+      saveLikedMoviesToLocalStorage(updatedLikes); // 로컬 스토리지에 저장
       setLiked(false);
     }
   };
