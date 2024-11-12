@@ -12,6 +12,7 @@ const Home = () => {
   const [actionMovies, setActionMovies] = useState([]);
   const [comedyMovies, setComedyMovies] = useState([]);
   const [featuredMovie, setFeaturedMovie] = useState(null); // 추가된 상태
+  const [trailerUrl, setTrailerUrl] = useState(''); // 트레일러 URL 상태 추가
 
   const navigate = useNavigate(); // useNavigate 훅 사용
 
@@ -49,18 +50,51 @@ const Home = () => {
     getComedyMovies();
   }, []);
 
-  // Scroll functions for movie sections
+  // 스크롤 함수
   const scrollLeft = (id) => {
-    document.getElementById(id).scrollLeft -= 300;
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollLeft -= 300; // 왼쪽으로 300px 스크롤
+    }
   };
-
+  
   const scrollRight = (id) => {
-    document.getElementById(id).scrollLeft += 300;
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollLeft += 300; // 오른쪽으로 300px 스크롤
+    }
   };
 
-  // Functionality for Play and Info buttons
+  // 트레일러 데이터를 가져오는 함수
+  const fetchTrailer = async (movieId) => {
+    try {
+      const response = await fetch(
+        `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${process.env.REACT_APP_TMDB_API_KEY}`
+      );
+      const data = await response.json();
+      
+      // YouTube에서 제공되는 트레일러만 필터링
+      const trailer = data.results.find(
+        (video) => video.site === 'YouTube' && video.type === 'Trailer'
+      );
+
+      if (trailer) {
+        setTrailerUrl(`https://www.youtube.com/embed/${trailer.key}`); // YouTube 임베드 URL 설정
+      } else {
+        alert('해당 영화의 트레일러를 찾을 수 없습니다.');
+        setTrailerUrl(''); // 트레일러가 없으면 URL을 빈 값으로 설정
+      }
+      
+    } catch (error) {
+      console.error('트레일러를 가져오는 중 오류가 발생했습니다:', error);
+    }
+  };
+
+  // "재생" 버튼 클릭 시 트레일러 보여주기
   const handlePlayClick = () => {
-    alert(`Playing ${featuredMovie.title}!`);
+    if (featuredMovie) {
+      fetchTrailer(featuredMovie.id); // 영화 ID로 트레일러 데이터 가져오기
+    }
   };
 
   // "상세 정보" 버튼 클릭 시 영화 상세 페이지로 이동하는 함수
@@ -85,6 +119,20 @@ const Home = () => {
               <button className="info-btn" onClick={handleInfoClick}>상세 정보</button> {/* "상세 정보" 버튼 클릭 시 handleInfoClick 호출 */}
             </div>
           </div>
+        </div>
+      )}
+
+      {/* 트레일러 섹션 */}
+      {trailerUrl && (
+        <div className="trailer-section">
+          <iframe 
+            width="560" 
+            height="315" 
+            src={trailerUrl} 
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen></iframe>
         </div>
       )}
 

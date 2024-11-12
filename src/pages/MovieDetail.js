@@ -23,7 +23,7 @@ const MovieDetail = () => {
         setMovie(data);
 
         // 영화 트레일러 정보 요청 (콘솔에 URL 출력)
-        const videoResponse = await fetch(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=${API_KEY}&language=ko-KR`);
+        const videoResponse = await fetch(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=${API_KEY}`);
         console.log("Fetching video data from:", `https://api.themoviedb.org/3/movie/${id}/videos?api_key=${API_KEY}&language=ko-KR`);
         const videoData = await videoResponse.json();
         console.log("Video data:", videoData); // 응답 데이터 확인
