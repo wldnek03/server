@@ -1,44 +1,47 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { FaUser } from 'react-icons/fa'; // Font Awesome의 사람 아이콘 가져오기
+import { Link, useNavigate } from 'react-router-dom';
+import { FaUser } from 'react-icons/fa';
 import './Header.css';
 
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태 관리
   const [username, setUsername] = useState(''); // 사용자 이름 (로그인 시 표시)
+  const navigate = useNavigate(); // 페이지 이동을 위한 hook
 
-  const handleLoginLogout = () => {
+  const handleLogout = () => {
+    // 로그아웃 처리
+    setIsLoggedIn(false);
+    setUsername('');
+  };
+
+  const handleLoginClick = () => {
     if (isLoggedIn) {
-      // 로그아웃 처리
-      setIsLoggedIn(false);
-      setUsername('');
+      handleLogout();
     } else {
-      // 로그인 처리 (임시로 사용자 이름 설정)
-      setIsLoggedIn(true);
-      setUsername('JooUser');
+      navigate('/signin'); // 로그인 페이지로 이동
     }
   };
 
   return (
     <header className="header">
       <div className="logo">
-        <Link to="/">🎬 Joo movie</Link>
+        <Link to="/">🎬 Joo 영화</Link>
       </div>
       <nav className="nav-links">
-        <Link to="/">Home</Link>
-        <Link to="/popular">Popular</Link>
-        <Link to="/search">Search</Link>
-        <Link to="/wishlist">Wishlist</Link>
+        <Link to="/">홈</Link>
+        <Link to="/popular">인기작</Link>
+        <Link to="/search">검색</Link>
+        <Link to="/wishlist">위시리스트</Link>
         {isLoggedIn ? (
           <>
             <span className="username">{username}</span> {/* 사용자 이름 표시 */}
-            <button onClick={handleLoginLogout} className="auth-button">
-              Logout
+            <button onClick={handleLoginClick} className="auth-button">
+              로그아웃
             </button>
           </>
         ) : (
-          <button onClick={handleLoginLogout} className="auth-button">
-            <FaUser /> Sign In
+          <button onClick={handleLoginClick} className="auth-button">
+            <FaUser /> 로그인
           </button>
         )}
       </nav>
