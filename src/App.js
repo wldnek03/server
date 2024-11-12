@@ -15,7 +15,7 @@ function App() {
         {/* Public routes */}
         <Route path="/" element={<Home />} />
         <Route path="/search" element={<SearchMovies />} />
-        <Route path="/movie/:id" component={<MovieDetail/>} /> 
+        <Route path="/movie/:id" element={<MovieDetail/>} /> 
         <Route path="/signin" element={<SignIn />} />
 
         {/* Protected routes */}
