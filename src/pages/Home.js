@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // useNavigate 훅 추가
 import { fetchMovies } from '../services/api'; // API 호출 함수
 import HomeCard from '../components/HomeCard'; // 영화 카드 컴포넌트
 import Header from '../components/Header'; // 헤더 컴포넌트
@@ -11,6 +12,8 @@ const Home = () => {
   const [actionMovies, setActionMovies] = useState([]);
   const [comedyMovies, setComedyMovies] = useState([]);
   const [featuredMovie, setFeaturedMovie] = useState(null); // 추가된 상태
+
+  const navigate = useNavigate(); // useNavigate 훅 사용
 
   useEffect(() => {
     const getPopularMovies = async () => {
@@ -60,8 +63,11 @@ const Home = () => {
     alert(`Playing ${featuredMovie.title}!`);
   };
 
+  // "상세 정보" 버튼 클릭 시 영화 상세 페이지로 이동하는 함수
   const handleInfoClick = () => {
-    alert(`More info about ${featuredMovie.title}: ${featuredMovie.overview}`);
+    if (featuredMovie) {
+      navigate(`/movie/${featuredMovie.id}`); // 영화 ID를 기반으로 상세 페이지로 이동
+    }
   };
 
   return (
@@ -76,7 +82,7 @@ const Home = () => {
             <p>{featuredMovie.overview}</p>
             <div className="banner-buttons">
               <button className="play-btn" onClick={handlePlayClick}>재생</button>
-              <button className="info-btn" onClick={handleInfoClick}>상세 정보</button>
+              <button className="info-btn" onClick={handleInfoClick}>상세 정보</button> {/* "상세 정보" 버튼 클릭 시 handleInfoClick 호출 */}
             </div>
           </div>
         </div>

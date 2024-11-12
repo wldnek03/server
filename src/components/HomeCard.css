@@ -9,7 +9,7 @@
 
 /* 포스터 이미지 스타일 */
 .poster-container img {
-  width: 100%;
+  width: 80%;
   height: auto;
   display: block;
   aspect-ratio: 2/3; /* 포스터 비율 고정 (2:3) */
@@ -26,7 +26,7 @@
 
 /* 영화 제목 스타일 */
 .movie-title {
-  font-size: 1rem; /* 제목 크기 */
+  font-size: 0.5rem; /* 제목 크기 */
   color: white; /* 텍스트 색상 */
   text-align: center; /* 중앙 정렬 */
   margin-top: 10px; /* 이미지와의 간격 */

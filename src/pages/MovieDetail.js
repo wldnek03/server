@@ -22,9 +22,11 @@ const MovieDetail = () => {
         const data = await response.json();
         setMovie(data);
 
-        // 영화 트레일러 정보 요청
+        // 영화 트레일러 정보 요청 (콘솔에 URL 출력)
         const videoResponse = await fetch(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=${API_KEY}&language=ko-KR`);
+        console.log("Fetching video data from:", `https://api.themoviedb.org/3/movie/${id}/videos?api_key=${API_KEY}&language=ko-KR`);
         const videoData = await videoResponse.json();
+        console.log("Video data:", videoData); // 응답 데이터 확인
         
         // 트레일러가 있으면 첫 번째 트레일러의 key 저장 (YouTube 동영상 key)
         const trailer = videoData.results.find(video => video.type === "Trailer" && video.site === "YouTube");
@@ -65,7 +67,7 @@ const MovieDetail = () => {
             <p className="movie-overview">{movie.overview}</p>
 
             {/* 트레일러가 있을 경우 YouTube 영상 삽입 */}
-            {trailerKey && (
+            {trailerKey ? (
               <div className="trailer-container">
                 <h2>예고편</h2>
                 <iframe
@@ -78,6 +80,8 @@ const MovieDetail = () => {
                   allowFullScreen
                 ></iframe>
               </div>
+            ) : (
+              <p>예고편이 없습니다.</p> 
             )}
           </div>
         </div>
