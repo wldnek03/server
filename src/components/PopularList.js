@@ -16,15 +16,6 @@ const PopularList = () => {
     const [moviesPerPage, setMoviesPerPage] = useState(10); // 한 페이지당 영화 개수
     const [showTopButton, setShowTopButton] = useState(false); // Scroll to Top 버튼 상태
 
-    // 스크롤 금지 및 허용 함수
-    const blockScroll = () => {
-        document.body.style.overflow = 'hidden';
-    };
-
-    const allowScroll = () => {
-        document.body.style.overflow = 'auto';
-    };
-
     // 브라우저 크기에 따라 한 페이지에 표시할 영화 개수 계산
     const calculateMoviesPerPage = () => {
         const gridWidth = document.querySelector('.movie-grid')?.offsetWidth || window.innerWidth;
@@ -55,10 +46,10 @@ const PopularList = () => {
     useEffect(() => {
         fetchPopularMovies(currentPage);
         if (currentView === 'grid') {
-            blockScroll();  // 그리드 뷰일 때 스크롤 금지
+            document.body.classList.add('no-scroll');  // 그리드 뷰일 때 스크롤 금지 (클래스 추가)
             setMoviesPerPage(calculateMoviesPerPage());  // 한 페이지당 영화 개수 설정
         } else {
-            allowScroll();  // 리스트 뷰일 때 스크롤 허용
+            document.body.classList.remove('no-scroll');  // 리스트 뷰일 때 스크롤 허용 (클래스 제거)
         }
         
         const handleResize = () => {
@@ -69,7 +60,10 @@ const PopularList = () => {
 
         window.addEventListener('resize', handleResize);
 
-        return () => window.removeEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            document.body.classList.remove('no-scroll');  // 컴포넌트 언마운트 시 클래스 제거 (안전 조치)
+        };
         
     }, [currentPage, currentView, fetchPopularMovies]);
 

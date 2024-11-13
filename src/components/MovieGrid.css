@@ -23,15 +23,19 @@
     border-radius: 10px; /* 포스터 모서리를 둥글게 설정 (선택 사항) */
     aspect-ratio: 13/12; /* 포스터 비율을 2:3으로 고정 */
     max-width: 180px; /* 최대 너비를 200px로 제한 */
-    max-height: 200px;
+    max-height: 180px;
     object-fit: cover; /* 이미지가 부모 요소를 채우면서 비율 유지 */
 }
 
 /* 영화 제목 스타일 */
 .movie-grid-item h3 {
     text-align: center;
-    font-size: 16px;
+    font-size: 14px;
     margin-top: 10px;
+    max-width: 150px; /* 제목 영역의 최대 높이를 설정 */
+    word-wrap: break-word; /* 긴 단어가 있을 경우 줄바꿈 */
+    display: -webkit-box; /* Flexbox 기반의 다중 줄 자르기 지원 */
+    -webkit-box-orient: vertical; /* Flexbox 방향을 수직으로 설정 */
 }
 
 /* 좋아요 하트 아이콘 스타일 - 항상 보이게 설정 */
@@ -76,10 +80,7 @@
     font-size: 18px; /* 페이지 번호 크기 증가 */
 }
 
-/* 그리드 뷰일 때 스크롤 금지 처리 (선택 사항) */
-body.no-scroll {
-    overflow-y: hidden; /* 세로 스크롤 금지 */
-}
+
 
 /* 반응형 디자인 - 작은 화면에서는 한 줄에 두 개씩 표시 */
 @media (max-width: 768px) {

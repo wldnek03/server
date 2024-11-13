@@ -40,5 +40,8 @@
 }
 
 .scroll-to-top:hover {
-  background-color: #ef1616;
+  background-color: #d41414; /* Hover 시 색상 변화 */
+}
+.no-scroll {
+  overflow: hidden;
 }
