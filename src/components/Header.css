@@ -14,7 +14,6 @@
   transition: background-color 0.3s ease; /* 배경색 전환 애니메이션 */
 }
 
-
 .header.scrolled {
   background-color: rgba(20, 20, 20, 0.8); /* 스크롤 시 투명한 배경 */
 }
@@ -23,7 +22,9 @@
   color: white;
   text-decoration: none;
   margin-right: 20px; /* 링크 간격을 더 넓게 */
-  font-size: 18px; /* 링크 텍스트 크기 증가 */
+  
+  /* 동적으로 폰트 크기 조절 (최소값, 뷰포트 비율, 최대값) */
+  font-size: clamp(14px, 2vw, 18px); 
 }
 
 .header a:hover {
@@ -39,8 +40,11 @@
 .auth-button {
   background-color: transparent;
   border: none;
+  
+  /* 동적으로 폰트 크기 조절 (최소값, 뷰포트 비율, 최대값) */
+  font-size: clamp(14px, 2vw, 18px); 
+   
   color: white;
-  font-size: 18px;
   cursor: pointer;
 }
 
@@ -49,8 +53,12 @@
 }
 
 .username {
-  margin-right: 15px;
+   margin-right:15px;
+
+   /* 동적으로 폰트 크기 조절 (최소값, 뷰포트 비율, 최대값) */
+   font-size: clamp(14px,2vw ,18 px)
 }
+
 
 /* 사용자 아이콘 크기 조정 */
 .user-icon {
