@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import './HomeCard.css';
+import './MovieGrid.css'; // 스타일 파일
 import { saveLikedMoviesToLocalStorage, getLikedMoviesFromLocalStorage } from '../utils/localStorage'; // 로컬 스토리지 함수 임포트
 
-const HomeCard = ({ movie }) => {
+const MovieGrid = ({ movie }) => {
   // localStorage에서 좋아요 상태 불러오기
   const [liked, setLiked] = useState(() => {
     const savedLikes = getLikedMoviesFromLocalStorage();
@@ -27,20 +27,21 @@ const HomeCard = ({ movie }) => {
   };
 
   return (
-    <div className="movie-card" onClick={handlePosterClick}>
+    <div className="movie-grid-item" onClick={handlePosterClick}>
+      {/* 포스터 이미지 */}
       <div className="poster-container">
-        {/* 포스터 이미지 */}
         <img 
-          src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} 
-          alt={movie.title}
+          src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`} 
+          alt={movie.title} 
+          className="poster-image"
         />
-        {/* 영화 제목 */}
-        <h3 className="movie-title">{movie.title}</h3>
-        {/* liked 값에 따라 하트 아이콘 표시 */}
-        {liked && <span className="like-icon">❤️</span>}
       </div>
+      {/* 영화 제목 */}
+      <h3>{movie.title}</h3>
+      {/* liked 값에 따라 하트 아이콘 표시 */}
+      {liked && <span className="like-icon">❤️</span>}
     </div>
   );
 };
 
-export default HomeCard;
+export default MovieGrid;
