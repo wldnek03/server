@@ -40,7 +40,31 @@
 
 .wishlist-container {
   display: grid;
-  grid-template-columns: repeat(5, 1fr); /* 한 줄에 5개씩 배치 */
+  grid-template-columns: repeat(5, 1fr); /* 기본값: 한 줄에 5개 */
   gap: 20px; /* 아이템 사이의 간격 */
   padding: 20px;
+}
+
+@media (max-width: 1200px) {
+  .wishlist-container {
+    grid-template-columns: repeat(4, 1fr); /* 화면 너비가 1200px 이하일 때 한 줄에 4개 */
+  }
+}
+
+@media (max-width: 992px) {
+  .wishlist-container {
+    grid-template-columns: repeat(3, 1fr); /* 화면 너비가 992px 이하일 때 한 줄에 3개 */
+  }
+}
+
+@media (max-width: 768px) {
+  .wishlist-container {
+    grid-template-columns: repeat(2, 1fr); /* 화면 너비가 768px 이하일 때 한 줄에 2개 */
+  }
+}
+
+@media (max-width: 576px) {
+  .wishlist-container {
+    grid-template-columns: repeat(1, 1fr); /* 화면 너비가 576px 이하일 때 한 줄에 1개 */
+  }
 }
