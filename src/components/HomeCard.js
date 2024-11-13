@@ -3,7 +3,7 @@ import './HomeCard.css';
 import { saveLikedMoviesToLocalStorage, getLikedMoviesFromLocalStorage } from '../utils/localStorage'; // 로컬 스토리지 함수 임포트
 
 const HomeCard = ({ movie }) => {
-  // localStorage에서 좋아요 상태 불러오기
+  // localStorage에서 좋아요 상태 불러오기 (초기화 함수 사용)
   const [liked, setLiked] = useState(() => {
     const savedLikes = getLikedMoviesFromLocalStorage();
     return savedLikes.some(savedMovie => savedMovie.id === movie.id); // 영화 ID로 좋아요 상태 확인
@@ -27,7 +27,7 @@ const HomeCard = ({ movie }) => {
   };
 
   return (
-    <div className="movie-card" onClick={handlePosterClick}>
+    <div className="home-card-item" onClick={handlePosterClick}>
       <div className="poster-container">
         {/* 포스터 이미지 */}
         <img 
@@ -35,7 +35,7 @@ const HomeCard = ({ movie }) => {
           alt={movie.title}
         />
         {/* 영화 제목 */}
-        <h3 className="movie-title">{movie.title}</h3>
+        <h3 className="movie-title-item">{movie.title}</h3>
         {/* liked 값에 따라 하트 아이콘 표시 */}
         {liked && <span className="like-icon">❤️</span>}
       </div>
