@@ -7,6 +7,7 @@ const SignIn = ({ onLoginSuccess }) => {
   const [email, setEmail] = useState('');
   const [apiKey, setApiKey] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const [isRotating, setIsRotating] = useState(false); // 회전 상태 추가
   const navigate = useNavigate();
 
   // 이메일 유효성 검사 함수
@@ -46,6 +47,9 @@ const SignIn = ({ onLoginSuccess }) => {
           localStorage.removeItem('rememberedEmail');
         }
 
+        // 로그인 성공 시 사용자 정보를 로컬 스토리지에 저장
+        localStorage.setItem('user', JSON.stringify({ email }));
+
         alert('로그인 성공!');
         onLoginSuccess(email);
         navigate('/'); // 메인 페이지로 리다이렉트
@@ -64,14 +68,20 @@ const SignIn = ({ onLoginSuccess }) => {
     }
   };
 
-  // 회원가입 페이지로 이동하는 함수
+  // 회원가입 페이지로 이동하는 함수 (회전 애니메이션 추가)
   const handleSignUp = () => {
-    navigate('/signup'); // 회원가입 페이지로 리다이렉트
+    setIsRotating(true); // 회전 시작
+
+    // 애니메이션이 끝난 후 회원가입 페이지로 이동
+    setTimeout(() => {
+      navigate('/signup');
+    }, 600); // CSS에서 설정한 전환 시간과 동일하게 설정 (0.6초)
   };
 
   return (
-    <div className="signin"> {/* .signin 클래스 추가 */}
+    <div className={`signin ${isRotating ? 'rotate-out' : ''}`}>
       <h1>로그인</h1>
+      
       <input 
         type="email" 
         placeholder="이메일" 
@@ -86,7 +96,7 @@ const SignIn = ({ onLoginSuccess }) => {
         onChange={(e) => setApiKey(e.target.value)} 
       />
 
-      <div className="checkbox-container"> {/* .checkbox-container 클래스 추가 */}
+      <div className="checkbox-container">
         <input type="checkbox" id="rememberMe" checked={rememberMe} onChange={() => setRememberMe(!rememberMe)} />
         <label htmlFor="rememberMe">아이디 기억하기</label>
       </div>
@@ -96,9 +106,10 @@ const SignIn = ({ onLoginSuccess }) => {
       </button>
 
       {/* 회원가입 버튼 추가 */}
-      <button onClick={handleSignUp} style={{ marginLeft: '10px' }}>
+      <button onClick={handleSignUp} className="signup-button">
         회원가입
       </button>
+
     </div>
   );
 };

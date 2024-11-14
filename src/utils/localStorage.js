@@ -24,5 +24,53 @@ export const isMovieLiked = (movieId) => {
   return likedMovies.some(movie => movie.id === movieId);
 };
 
-const email = 'username@example.com'; // 실제 입력된 이메일 값
-localStorage.setItem('username', JSON.stringify({ email }));
+// 사용자 정보를 로컬 스토리지에 저장하는 함수 (회원가입 시 사용)
+export const saveUserToLocalStorage = (userId, password) => {
+  try {
+    const userData = { userId, password };
+    localStorage.setItem('user', JSON.stringify(userData));
+  } catch (error) {
+    console.error('Error saving user data to localStorage:', error);
+  }
+};
+
+// 로컬 스토리지에서 사용자 정보를 불러오는 함수
+export const getUserFromLocalStorage = () => {
+  try {
+    const savedUser = localStorage.getItem('user');
+    return savedUser ? JSON.parse(savedUser) : null;
+  } catch (error) {
+    console.error('Error getting user data from localStorage:', error);
+    return null;
+  }
+};
+
+// 로그인 여부를 로컬 스토리지에 저장하는 함수 (로그인 시 사용)
+export const saveLoginStatusToLocalStorage = (isLoggedIn) => {
+  try {
+    localStorage.setItem('isLoggedIn', JSON.stringify(isLoggedIn));
+  } catch (error) {
+    console.error('Error saving login status to localStorage:', error);
+  }
+};
+
+// 로컬 스토리지에서 로그인 여부를 불러오는 함수
+export const getLoginStatusFromLocalStorage = () => {
+  try {
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    return isLoggedIn ? JSON.parse(isLoggedIn) : false;
+  } catch (error) {
+    console.error('Error getting login status from localStorage:', error);
+    return false;
+  }
+};
+
+// 로그아웃 처리 및 로그인 상태 초기화
+export const clearLoginStatusFromLocalStorage = () => {
+  try {
+    localStorage.removeItem('isLoggedIn'); // 로그인 상태 제거
+    localStorage.removeItem('user'); // 사용자 정보 제거
+  } catch (error) {
+    console.error('Error clearing login status from localStorage:', error);
+  }
+};

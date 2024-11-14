@@ -15,7 +15,7 @@ const Header = () => {
       setIsLoggedIn(true);
       setUsername(storedUser.email.split('@')[0]); // 이메일의 앞부분(아이디)만 표시
     }
-  }, []); // 빈 배열을 사용하여 컴포넌트 마운트 시 한 번만 실행
+  }, []); 
 
   const handleLogout = () => {
     // 로그아웃 처리
@@ -23,6 +23,8 @@ const Header = () => {
     setUsername('');
     localStorage.removeItem('user'); // 로컬 스토리지에서 사용자 정보 제거
     navigate('/'); // 홈으로 리다이렉트
+    
+    window.location.reload(); // 로그아웃 후 페이지 새로고침하여 상태 반영
   };
 
   const handleLoginClick = () => {
@@ -38,11 +40,13 @@ const Header = () => {
       <div className="logo">
         <Link to="/">🎬 Joo 영화</Link>
       </div>
+      
       <nav className="nav-links">
         <Link to="/">홈</Link>
         <Link to="/popular">인기작</Link>
         <Link to="/search">검색</Link>
         <Link to="/wishlist">위시리스트</Link>
+        
         {isLoggedIn ? (
           <>
             <span className="username">{username}</span> {/* 사용자 이름(아이디) 표시 */}
@@ -55,6 +59,7 @@ const Header = () => {
             <FaUser /> 로그인
           </button>
         )}
+        
       </nav>
     </header>
   );

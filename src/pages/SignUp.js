@@ -7,6 +7,7 @@ const SignUp = () => {
   const [apiKey, setApiKey] = useState('');
   const [confirmApiKey, setConfirmApiKey] = useState('');
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [isRotating, setIsRotating] = useState(false); // 회전 상태 관리
   const navigate = useNavigate();
 
   // 이메일 유효성 검사 함수
@@ -43,21 +44,32 @@ const SignUp = () => {
     }
 
     // 사용자 정보 저장 (로컬 스토리지)
-    const userData = { email: email, apiKey: apiKey };
+    const userData = { email, apiKey };
     
     localStorage.setItem('user', JSON.stringify(userData));
+    
     alert('회원가입이 완료되었습니다!');
     
-    navigate('/signin'); // 회원가입 후 로그인 페이지로 이동
+    // 회전 애니메이션 후 로그인 페이지로 이동
+    setIsRotating(true);
+    
+    setTimeout(() => {
+      navigate('/signin');
+    }, 600); // CSS에서 설정한 전환 시간과 동일하게 설정 (0.6초)
   };
 
   // 로그인 페이지로 이동하는 함수
   const handleGoToSignIn = () => {
-    navigate('/signin'); // 로그인 페이지로 리다이렉트
+     // 회전 애니메이션 후 로그인 페이지로 이동
+     setIsRotating(true);
+
+     setTimeout(() => {
+       navigate('/signin');
+     }, 600); 
   };
 
   return (
-    <div className="signup"> {/* .signup 클래스 추가 */}
+    <div className={`signup ${isRotating ? 'rotate-out' : ''}`}> {/* .signup 클래스 및 회전 애니메이션 클래스 추가 */}
       <h1>회원가입</h1>
       
       <input 
