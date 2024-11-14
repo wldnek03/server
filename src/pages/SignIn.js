@@ -1,28 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './SignIn.css';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 const SignIn = ({ onLoginSuccess }) => {
   const [email, setEmail] = useState('');
   const [apiKey, setApiKey] = useState('');
-  const [confirmApiKey, setConfirmApiKey] = useState('');
-  const [isSignUp, setIsSignUp] = useState(false);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false); // Remember me state
-  const [agreedToTerms, setAgreedToTerms] = useState(false); // Terms agreement state
+  const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
-
-  // Load stored email if "Remember Me" was checked previously
-  useEffect(() => {
-    const storedEmail = localStorage.getItem('rememberedEmail');
-    if (storedEmail) {
-      setEmail(storedEmail);
-      setRememberMe(true);
-    }
-  }, []);
 
   // 이메일 유효성 검사 함수
   const validateEmail = (email) => {
@@ -30,51 +14,28 @@ const SignIn = ({ onLoginSuccess }) => {
     return emailRegex.test(email);
   };
 
-  // 회원가입 처리 함수
-  const handleSignUp = () => {
-    if (!validateEmail(email)) {
-      toast.error('유효하지 않은 이메일 형식입니다.');
-      return;
-    }
-
-    if (!apiKey) {
-      toast.error('API 키를 입력해주세요.');
-      return;
-    }
-
-    if (apiKey !== confirmApiKey) {
-      toast.error('비밀번호가 일치하지 않습니다.');
-      return;
-    }
-
-    if (!agreedToTerms) {
-      toast.error('약관에 동의해야 합니다.');
-      return;
-    }
-
-    // 사용자 정보 저장 (로컬 스토리지)
-    const userData = {
-      email: email,
-      apiKey: apiKey,
-    };
-
-    localStorage.setItem('user', JSON.stringify(userData));
-    toast.success('회원가입이 완료되었습니다!');
-
-    // 페이지 전환 애니메이션 적용 후 로그인 화면으로 전환
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setIsSignUp(false); 
-      setIsTransitioning(false);
-      navigate('/signin'); // 회원가입 후 로그인 페이지로 이동
-    }, 500); 
+  // TMDB API 키 유효성 검사 함수
+  const validateApiKey = (apiKey) => {
+    return apiKey.length === 32; // TMDB API 키는 보통 32자입니다.
   };
 
   // 로그인 처리 함수
   const handleLogin = async () => {
+    if (!validateEmail(email)) {
+      alert('유효하지 않은 이메일 형식입니다.');
+      return;
+    }
+
+    if (!validateApiKey(apiKey)) {
+      alert('유효하지 않은 API 키 형식입니다.');
+      return;
+    }
+
     try {
+      // API 요청을 통해 TMDB 서비스에 접근
       const response = await axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}`);
 
+      // API 요청이 성공하면 로그인 성공 처리
       if (response.status === 200) {
         localStorage.setItem('sessionId', apiKey); // 세션 저장
 
@@ -84,30 +45,32 @@ const SignIn = ({ onLoginSuccess }) => {
           localStorage.removeItem('rememberedEmail');
         }
 
-        toast.success('로그인 성공!');
+        alert('로그인 성공!');
         onLoginSuccess(email);
         navigate('/'); // 메인 페이지로 리다이렉트
       } else {
-        toast.error('API 키가 유효하지 않습니다.');
+        alert(`API 응답 오류: ${response.status}`);
       }
+      
     } catch (error) {
-      toast.error('API 키가 유효하지 않습니다.');
+      console.error("API 요청 중 오류:", error.response ? error.response.data : error.message);
+      
+      if (error.response && error.response.data && error.response.data.status_message) {
+        alert(`API 요청 중 오류: ${error.response.data.status_message}`);
+      } else {
+        alert('API 요청 중 오류가 발생했습니다.');
+      }
     }
   };
 
-  // 페이지 전환 버튼 클릭 시 애니메이션 적용
-  const handlePageSwitch = () => {
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setIsSignUp(!isSignUp);
-      setIsTransitioning(false);
-    }, 500);
+  // 회원가입 페이지로 이동하는 함수
+  const handleSignUp = () => {
+    navigate('/signup'); // 회원가입 페이지로 리다이렉트
   };
 
   return (
-    <div className={`signin ${isTransitioning ? 'transition' : ''}`}>
-      <h1>{isSignUp ? '회원가입' : '로그인'}</h1>
-
+    <div>
+      <h1>로그인</h1>
       <input 
         type="email" 
         placeholder="이메일" 
@@ -122,44 +85,19 @@ const SignIn = ({ onLoginSuccess }) => {
         onChange={(e) => setApiKey(e.target.value)} 
       />
 
-      {isSignUp && (
-        <>
-          <input 
-            type="text" 
-            placeholder="TMDB API 키 확인" 
-            value={confirmApiKey}
-            onChange={(e) => setConfirmApiKey(e.target.value)} 
-          />
-          <div>
-            <input type="checkbox" id="terms" checked={agreedToTerms} onChange={() => setAgreedToTerms(!agreedToTerms)} />
-            <label htmlFor="terms">약관에 동의합니다</label>
-          </div>
-        </>
-      )}
+      <div>
+        <input type="checkbox" id="rememberMe" checked={rememberMe} onChange={() => setRememberMe(!rememberMe)} />
+        <label htmlFor="rememberMe">아이디 기억하기</label>
+      </div>
 
-      {!isSignUp && (
-        <div>
-          <input type="checkbox" id="rememberMe" checked={rememberMe} onChange={() => setRememberMe(!rememberMe)} />
-          <label htmlFor="rememberMe">아이디 기억하기</label>
-        </div>
-      )}
-
-      {isSignUp ? (
-        <button onClick={handleSignUp}>
-          회원가입
-        </button>
-      ) : (
-        <button onClick={handleLogin}>
-          로그인
-        </button>
-      )}
-
-      <button onClick={handlePageSwitch}>
-        {isSignUp ? '이미 계정이 있으신가요? 로그인' : "계정이 없으신가요? 회원가입"}
+      <button onClick={handleLogin}>
+        로그인
       </button>
 
-      {/* Toast 알림 표시 */}
-      <ToastContainer />
+      {/* 회원가입 버튼 추가 */}
+      <button onClick={handleSignUp} style={{ marginLeft: '10px' }}>
+        회원가입
+      </button>
     </div>
   );
 };
