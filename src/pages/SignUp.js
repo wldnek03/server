@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './SignUp.css'; // SignUp.css 파일을 불러옵니다.
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
@@ -50,8 +51,13 @@ const SignUp = () => {
     navigate('/signin'); // 회원가입 후 로그인 페이지로 이동
   };
 
+  // 로그인 페이지로 이동하는 함수
+  const handleGoToSignIn = () => {
+    navigate('/signin'); // 로그인 페이지로 리다이렉트
+  };
+
   return (
-    <div>
+    <div className="signup"> {/* .signup 클래스 추가 */}
       <h1>회원가입</h1>
       
       <input 
@@ -59,6 +65,7 @@ const SignUp = () => {
         placeholder="이메일" 
         value={email}
         onChange={(e) => setEmail(e.target.value)} 
+        className="input-field" 
       />
       
       <input 
@@ -66,6 +73,7 @@ const SignUp = () => {
         placeholder="TMDB API 키" 
         value={apiKey}
         onChange={(e) => setApiKey(e.target.value)} 
+        className="input-field" 
       />
 
       <input 
@@ -73,15 +81,21 @@ const SignUp = () => {
         placeholder="TMDB API 키 확인" 
         value={confirmApiKey}
         onChange={(e) => setConfirmApiKey(e.target.value)} 
+        className="input-field"
       />
 
-      <div>
+      <div className="checkbox-container"> {/* .checkbox-container 클래스 추가 */}
         <input type="checkbox" id="terms" checked={agreedToTerms} onChange={() => setAgreedToTerms(!agreedToTerms)} />
         <label htmlFor="terms">약관에 동의합니다</label>
       </div>
 
-      <button onClick={handleSignUp}>
+      <button onClick={handleSignUp} className="signup-button">
         회원가입
+      </button>
+
+      {/* 로그인 버튼 추가 */}
+      <button onClick={handleGoToSignIn} className="signup-button">
+        로그인
       </button>
       
     </div>

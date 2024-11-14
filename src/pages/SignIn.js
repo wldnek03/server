@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import "./SignIn.css"; // CSS 파일 가져오기
 
 const SignIn = ({ onLoginSuccess }) => {
   const [email, setEmail] = useState('');
@@ -69,7 +70,7 @@ const SignIn = ({ onLoginSuccess }) => {
   };
 
   return (
-    <div>
+    <div className="signin"> {/* .signin 클래스 추가 */}
       <h1>로그인</h1>
       <input 
         type="email" 
@@ -85,7 +86,7 @@ const SignIn = ({ onLoginSuccess }) => {
         onChange={(e) => setApiKey(e.target.value)} 
       />
 
-      <div>
+      <div className="checkbox-container"> {/* .checkbox-container 클래스 추가 */}
         <input type="checkbox" id="rememberMe" checked={rememberMe} onChange={() => setRememberMe(!rememberMe)} />
         <label htmlFor="rememberMe">아이디 기억하기</label>
       </div>

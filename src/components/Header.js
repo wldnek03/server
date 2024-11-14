@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUser } from 'react-icons/fa';
 import './Header.css';
@@ -8,10 +8,21 @@ const Header = () => {
   const [username, setUsername] = useState(''); // 사용자 이름 (로그인 시 표시)
   const navigate = useNavigate(); // 페이지 이동을 위한 hook
 
+  // 컴포넌트가 마운트될 때 로컬 스토리지에서 사용자 정보 가져오기
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user')); // 로컬 스토리지에서 사용자 정보 가져오기
+    if (storedUser && storedUser.email) {
+      setIsLoggedIn(true);
+      setUsername(storedUser.email.split('@')[0]); // 이메일의 앞부분(아이디)만 표시
+    }
+  }, []); // 빈 배열을 사용하여 컴포넌트 마운트 시 한 번만 실행
+
   const handleLogout = () => {
     // 로그아웃 처리
     setIsLoggedIn(false);
     setUsername('');
+    localStorage.removeItem('user'); // 로컬 스토리지에서 사용자 정보 제거
+    navigate('/'); // 홈으로 리다이렉트
   };
 
   const handleLoginClick = () => {
@@ -34,7 +45,7 @@ const Header = () => {
         <Link to="/wishlist">위시리스트</Link>
         {isLoggedIn ? (
           <>
-            <span className="username">{username}</span> {/* 사용자 이름 표시 */}
+            <span className="username">{username}</span> {/* 사용자 이름(아이디) 표시 */}
             <button onClick={handleLoginClick} className="auth-button">
               로그아웃
             </button>

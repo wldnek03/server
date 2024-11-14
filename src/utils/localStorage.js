@@ -23,3 +23,6 @@ export const isMovieLiked = (movieId) => {
   const likedMovies = getLikedMoviesFromLocalStorage();
   return likedMovies.some(movie => movie.id === movieId);
 };
+
+const email = 'username@example.com'; // 실제 입력된 이메일 값
+localStorage.setItem('username', JSON.stringify({ email }));
