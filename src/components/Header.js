@@ -5,13 +5,12 @@ import './Header.css';
 
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태 관리
-  const [username, setUsername] = useState(''); // 사용자 이름 (로그인 시 표시)
-  const navigate = useNavigate(); // 페이지 이동을 위한 hook
+  const [username, setUsername] = useState('');
+  const navigate = useNavigate(); 
 
   // 컴포넌트가 마운트될 때 로컬 스토리지에서 사용자 정보 가져오기
   useEffect(() => {
-    const savedUser = JSON.parse(localStorage.getItem('currentUser')); // 로컬 스토리지에서 사용자 정보 가져오기
-    console.log('Saved User in Header:', savedUser); // 디버깅 로그
+    const savedUser = JSON.parse(localStorage.getItem('currentUser')); 
 
     if (savedUser && savedUser.nickname) {
       setIsLoggedIn(true);
@@ -23,8 +22,8 @@ const Header = () => {
     // 로그아웃 처리
     setIsLoggedIn(false);
     setUsername('');
-    localStorage.removeItem('currentUser'); // 로컬 스토리지에서 사용자 정보 제거
-    localStorage.removeItem('accessToken'); // 액세스 토큰 제거
+    localStorage.removeItem('currentUser'); 
+    localStorage.removeItem('accessToken'); 
     navigate('/'); // 홈으로 리다이렉트
     
     alert('로그아웃 되었습니다.');
@@ -44,7 +43,7 @@ const Header = () => {
         
         {isLoggedIn ? (
           <>
-            <span className="username">{username}</span> {/* 사용자 이름(닉네임) 표시 */}
+            <span className="username">{username}</span> 
             <button onClick={handleLogout} className="auth-button">
               로그아웃
             </button>
