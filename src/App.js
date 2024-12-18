@@ -5,7 +5,6 @@ import PopularList from './components/PopularList';
 import SearchMovies from './pages/SearchMovies';
 import SignIn from './pages/SignIn';
 import Wishlist from './pages/Wishlist';
-import ProtectedRoute from './components/ProtectedRoute'; // Import the ProtectedRoute component
 import MovieDetail from './pages/MovieDetail';
 
 function App() {
@@ -21,17 +20,13 @@ function App() {
         <Route 
           path="/popular" 
           element={
-            <ProtectedRoute>
               <PopularList />
-            </ProtectedRoute>
           } 
         />
         <Route 
           path="/wishlist" 
           element={
-            <ProtectedRoute>
               <Wishlist />
-            </ProtectedRoute>
           } 
         />
       </Routes>
