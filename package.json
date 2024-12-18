@@ -23,10 +23,11 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "start": "react-scripts start",
-    "dev": "NODE_ENV=development nodemon server.js",
-    "build": "NODE_ENV=production webpack --mode production",
+    "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "dev": "cross-env NODE_ENV=development react-scripts start",
+    "prod:build": "cross-env NODE_ENV=production react-scripts build"
   },
   "eslintConfig": {
     "extends": [
