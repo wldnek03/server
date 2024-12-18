@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import MovieListItem from '../components/MovieListItem'; // MovieListItem 컴포넌트 임포트
 import Header from '../components/Header'; // Header 컴포넌트 임포트
-import { getLikedMoviesFromLocalStorage } from '../utils/localStorage'; // 유틸리티 함수 임포트
+import { getLikedMoviesFromLocalStorage, getUserFromLocalStorage } from '../utils/localStorage'; // 유틸리티 함수 임포트
 
 const Wishlist = () => {
-  const [wishlistMovies, setWishlistMovies] = useState([]);
+  const [wishlistMovies, setWishlistMovies] = useState([]); // 위시리스트 상태
+  const [currentUserId, setCurrentUserId] = useState(null); // 현재 로그인된 사용자 ID
 
-  // localStorage에서 좋아요한 영화 목록 불러오기
+  // 컴포넌트 마운트 시 현재 로그인된 사용자와 좋아요 목록 가져오기
   useEffect(() => {
-    const savedLikes = getLikedMoviesFromLocalStorage(); // 유틸리티 함수 사용
-    setWishlistMovies(savedLikes); // 저장된 전체 영화를 상태로 설정
+    const currentUser = getUserFromLocalStorage(); // 현재 사용자 정보 가져오기
+    if (currentUser && currentUser.id) {
+      setCurrentUserId(currentUser.id); // 사용자 ID 설정
+      const savedLikes = getLikedMoviesFromLocalStorage(currentUser.id); // 사용자별 좋아요 목록 가져오기
+      setWishlistMovies(savedLikes); // 저장된 전체 영화를 상태로 설정
+    }
   }, []);
 
   return (

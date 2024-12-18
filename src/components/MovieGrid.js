@@ -1,34 +1,48 @@
-import React, { useState } from 'react';
-import './MovieGrid.css'; // 스타일 파일
-import { saveLikedMoviesToLocalStorage, getLikedMoviesFromLocalStorage } from '../utils/localStorage'; // 로컬 스토리지 함수 임포트
+import React, { useState, useEffect } from 'react';
+import './MovieGrid.css';
+import { 
+  saveLikedMoviesToLocalStorage, 
+  getLikedMoviesFromLocalStorage, 
+  getUserFromLocalStorage 
+} from '../utils/localStorage';
 
 const MovieGrid = ({ movie }) => {
-  // localStorage에서 좋아요 상태 불러오기
-  const [liked, setLiked] = useState(() => {
-    const savedLikes = getLikedMoviesFromLocalStorage();
-    return savedLikes.some(savedMovie => savedMovie.id === movie.id); // 영화 ID로 좋아요 상태 확인
-  });
+  const [liked, setLiked] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState(null);
 
-  // 포스터 클릭 시 좋아요 상태 업데이트
+  useEffect(() => {
+    const currentUser = getUserFromLocalStorage();
+    if (currentUser && currentUser.id) {
+      setCurrentUserId(currentUser.id); // 사용자 ID 설정
+      console.log('Current User ID:', currentUser.id); // 디버깅 로그
+      const savedLikes = getLikedMoviesFromLocalStorage(currentUser.id);
+      setLiked(savedLikes.some(savedMovie => savedMovie.id === movie.id));
+    } else {
+      console.warn('No logged-in user found'); // 디버깅 로그
+    }
+  }, [movie.id]);
+
   const handlePosterClick = () => {
-    const savedLikes = getLikedMoviesFromLocalStorage();
+    if (!currentUserId) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+
+    const savedLikes = getLikedMoviesFromLocalStorage(currentUserId);
 
     if (!savedLikes.some(savedMovie => savedMovie.id === movie.id)) {
-      // 좋아요 추가: 영화 전체 데이터를 저장
-      const updatedLikes = [...savedLikes, movie]; // 영화 전체 데이터를 추가
-      saveLikedMoviesToLocalStorage(updatedLikes); // 로컬 스토리지에 저장
-      setLiked(true); // 좋아요 상태 업데이트
+      const updatedLikes = [...savedLikes, movie];
+      saveLikedMoviesToLocalStorage(currentUserId, updatedLikes);
+      setLiked(true);
     } else {
-      // 좋아요 취소: 영화 ID로 필터링하여 제거
       const updatedLikes = savedLikes.filter(savedMovie => savedMovie.id !== movie.id);
-      saveLikedMoviesToLocalStorage(updatedLikes); // 로컬 스토리지에 저장
-      setLiked(false); // 좋아요 상태 업데이트
+      saveLikedMoviesToLocalStorage(currentUserId, updatedLikes);
+      setLiked(false);
     }
   };
 
   return (
     <div className="movie-grid-item" onClick={handlePosterClick}>
-      {/* 포스터 이미지 */}
       <div className="poster-container">
         <img 
           src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`} 
@@ -36,9 +50,7 @@ const MovieGrid = ({ movie }) => {
           className="poster-image"
         />
       </div>
-      {/* 영화 제목 */}
       <h3>{movie.title}</h3>
-      {/* liked 값에 따라 하트 아이콘 표시 */}
       {liked && <span className="like-icon">❤️</span>}
     </div>
   );

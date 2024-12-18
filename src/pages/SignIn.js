@@ -3,29 +3,26 @@ import axios from 'axios';
 
 const SignIn = () => {
   const REST_API_KEY = process.env.REACT_APP_KAKAO_REST_API_KEY; // .env 파일에 저장된 REST API 키
-  const REDIRECT_URI = process.env.REACT_APP_KAKAO_REDIRECT_URI; // 카카오 개발자 콘솔에 등록한 Redirect URI
+  const REDIRECT_URI = process.env.REACT_APP_KAKAO_REDIRECT_URI; // Redirect URI
 
-  // 카카오 로그인 버튼 클릭 시 호출
   const handleKakaoLogin = () => {
     const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code&prompt=login`;
     window.location.href = KAKAO_AUTH_URL;
   };
-  
-  // URL에서 인가 코드 추출 후 액세스 토큰 요청
+
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const authCode = urlParams.get('code');
 
     if (authCode) {
-      getAccessToken(authCode); // 인가 코드를 사용해 액세스 토큰 요청
+      getAccessToken(authCode);
 
-      // URL에서 code 파라미터 제거 (인가 코드 재사용 방지)
+      // URL에서 code 파라미터 제거
       const cleanUrl = window.location.origin + window.location.pathname;
       window.history.replaceState({}, document.title, cleanUrl);
     }
   }, []);
 
-  // 액세스 토큰 요청 함수
   const getAccessToken = async (authCode) => {
     try {
       const TOKEN_URL = 'https://kauth.kakao.com/oauth/token';
@@ -54,7 +51,6 @@ const SignIn = () => {
     }
   };
 
-  // 사용자 정보 요청 함수
   const getUserInfo = async (accessToken) => {
     try {
       const response = await axios.get('https://kapi.kakao.com/v2/user/me', {
@@ -63,15 +59,15 @@ const SignIn = () => {
         },
       });
 
-      const { email, profile } = response.data.kakao_account;
+      const { id, properties } = response.data;
 
-      // 사용자 정보를 로컬 스토리지에 저장
+      // 사용자 정보를 로컬 스토리지에 저장 (이메일 대신 id 사용)
       localStorage.setItem(
-        'user',
+        'currentUser',
         JSON.stringify({
-          email,
-          nickname: profile.nickname,
-          profileImg: profile.profile_image_url,
+          id,
+          nickname: properties.nickname,
+          profileImg: properties.profile_image,
         })
       );
 
