@@ -45,6 +45,7 @@ const SignIn = () => {
       const { access_token } = response.data;
       localStorage.setItem('accessToken', access_token); // 액세스 토큰 저장
       await getUserInfo(access_token); // 사용자 정보 요청
+      console.log('User Info:', response.data);
     } catch (error) {
       console.error('액세스 토큰 요청 실패:', error.response?.data || error.message);
       alert(`로그인 실패: ${error.response?.data?.error_description || error.message}`);
@@ -74,8 +75,12 @@ const SignIn = () => {
       alert('카카오 로그인 성공!');
       window.location.replace('/'); // 메인 페이지로 리다이렉트
     } catch (error) {
-      console.error('사용자 정보 요청 실패:', error.response?.data || error.message);
-      alert(`사용자 정보 요청 실패: ${error.response?.data?.error_description || error.message}`);
+      if (!navigator.onLine) {
+        alert('네트워크 연결이 끊어졌습니다. 인터넷 연결을 확인하세요.');
+      } else {
+        console.error('사용자 정보 요청 실패:', error.response?.data || error.message);
+        alert(`사용자 정보 요청 실패: ${error.response?.data?.error_description || error.message}`);
+      }
     }
   };
 
