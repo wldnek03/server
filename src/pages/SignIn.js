@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import axios from 'axios';
 
 const SignIn = () => {
@@ -10,20 +10,8 @@ const SignIn = () => {
     window.location.href = KAKAO_AUTH_URL;
   };
 
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const authCode = urlParams.get('code');
-
-    if (authCode) {
-      getAccessToken(authCode);
-
-      // URL에서 code 파라미터 제거
-      const cleanUrl = window.location.origin + window.location.pathname;
-      window.history.replaceState({}, document.title, cleanUrl);
-    }
-  }, []);
-
-  const getAccessToken = async (authCode) => {
+  // 액세스 토큰 요청 함수 (useCallback으로 메모이제이션)
+  const getAccessToken = useCallback(async (authCode) => {
     try {
       const TOKEN_URL = 'https://kauth.kakao.com/oauth/token';
       const response = await axios.post(
@@ -45,13 +33,13 @@ const SignIn = () => {
       const { access_token } = response.data;
       localStorage.setItem('accessToken', access_token); // 액세스 토큰 저장
       await getUserInfo(access_token); // 사용자 정보 요청
-      console.log('User Info:', response.data);
     } catch (error) {
       console.error('액세스 토큰 요청 실패:', error.response?.data || error.message);
       alert(`로그인 실패: ${error.response?.data?.error_description || error.message}`);
     }
-  };
+  }, [REST_API_KEY, REDIRECT_URI]);
 
+  // 사용자 정보 요청 함수
   const getUserInfo = async (accessToken) => {
     try {
       const response = await axios.get('https://kapi.kakao.com/v2/user/me', {
@@ -62,7 +50,7 @@ const SignIn = () => {
 
       const { id, properties } = response.data;
 
-      // 사용자 정보를 로컬 스토리지에 저장 (이메일 대신 id 사용)
+      // 사용자 정보를 로컬 스토리지에 저장
       localStorage.setItem(
         'currentUser',
         JSON.stringify({
@@ -83,6 +71,19 @@ const SignIn = () => {
       }
     }
   };
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const authCode = urlParams.get('code');
+
+    if (authCode) {
+      getAccessToken(authCode);
+
+      // URL에서 code 파라미터 제거
+      const cleanUrl = window.location.origin + window.location.pathname;
+      window.history.replaceState({}, document.title, cleanUrl);
+    }
+  }, [getAccessToken]); // getAccessToken을 의존성 배열에 추가
 
   return (
     <div className="signin">

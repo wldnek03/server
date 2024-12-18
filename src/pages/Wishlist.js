@@ -24,6 +24,13 @@ const Wishlist = () => {
 
       <h1 style={{ color: 'orange', fontSize: '2rem' }}>My Wishlist</h1>
 
+      {/* 현재 사용자 ID 표시 (디버깅 또는 UI 요소로 활용 가능) */}
+      {currentUserId && (
+        <p style={{ fontSize: '1rem', color: 'gray' }}>
+          사용자 ID: {currentUserId}
+        </p>
+      )}
+
       {/* 위시리스트에 있는 영화들을 MovieListItem으로 렌더링 */}
       <div className="wishlist-container">
         {wishlistMovies.length > 0 ? (
