@@ -31,7 +31,7 @@ const HomeCard = ({ movie }) => {
       <div className="poster-container">
         {/* 포스터 이미지 */}
         <img 
-          src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} 
+          src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}?api_key=${process.env.REACT_APP_TMDB_API_KEY}`} 
           alt={movie.title}
         />
         {/* 영화 제목 */}

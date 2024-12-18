@@ -26,7 +26,7 @@ const MovieCard = ({ movie }) => {
     <div className="movie-card" onClick={handleLikeClick}>
       <div className="poster-container">
         <img 
-          src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} 
+          src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}?api_key=${process.env.REACT_APP_TMDB_API_KEY}`} 
           alt={movie.title} 
         />
         {liked && <span className="like-icon">❤️</span>}

@@ -1,115 +1,94 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
 import axios from 'axios';
-import "./SignIn.css"; // CSS 파일 가져오기
 
-const SignIn = ({ onLoginSuccess }) => {
-  const [email, setEmail] = useState('');
-  const [apiKey, setApiKey] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
-  const [isRotating, setIsRotating] = useState(false); // 회전 상태 추가
-  const navigate = useNavigate();
+const SignIn = () => {
+  const REST_API_KEY = process.env.REACT_APP_KAKAO_REST_API_KEY; // .env 파일에 저장된 REST API 키
+  const REDIRECT_URI = process.env.REACT_APP_KAKAO_REDIRECT_URI; // 카카오 개발자 콘솔에 등록한 Redirect URI
 
-  // 이메일 유효성 검사 함수
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+  // 카카오 로그인 버튼 클릭 시 호출
+  const handleKakaoLogin = () => {
+    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code&prompt=login`;
+    window.location.href = KAKAO_AUTH_URL;
   };
+  
+  // URL에서 인가 코드 추출 후 액세스 토큰 요청
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const authCode = urlParams.get('code');
 
-  // TMDB API 키 유효성 검사 함수
-  const validateApiKey = (apiKey) => {
-    return apiKey.length === 32; // TMDB API 키는 보통 32자입니다.
-  };
+    if (authCode) {
+      getAccessToken(authCode); // 인가 코드를 사용해 액세스 토큰 요청
 
-  // 로그인 처리 함수
-  const handleLogin = async () => {
-    if (!validateEmail(email)) {
-      alert('유효하지 않은 이메일 형식입니다.');
-      return;
+      // URL에서 code 파라미터 제거 (인가 코드 재사용 방지)
+      const cleanUrl = window.location.origin + window.location.pathname;
+      window.history.replaceState({}, document.title, cleanUrl);
     }
+  }, []);
 
-    if (!validateApiKey(apiKey)) {
-      alert('유효하지 않은 API 키 형식입니다.');
-      return;
-    }
-
+  // 액세스 토큰 요청 함수
+  const getAccessToken = async (authCode) => {
     try {
-      // API 요청을 통해 TMDB 서비스에 접근
-      const response = await axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}`);
-
-      // API 요청이 성공하면 로그인 성공 처리
-      if (response.status === 200) {
-        localStorage.setItem('sessionId', apiKey); // 세션 저장
-
-        if (rememberMe) {
-          localStorage.setItem('rememberedEmail', email); // 이메일 저장
-        } else {
-          localStorage.removeItem('rememberedEmail');
+      const TOKEN_URL = 'https://kauth.kakao.com/oauth/token';
+      const response = await axios.post(
+        TOKEN_URL,
+        null,
+        {
+          params: {
+            grant_type: 'authorization_code',
+            client_id: REST_API_KEY,
+            redirect_uri: REDIRECT_URI,
+            code: authCode,
+          },
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
         }
+      );
 
-        // 로그인 성공 시 사용자 정보를 로컬 스토리지에 저장
-        localStorage.setItem('user', JSON.stringify({ email }));
-
-        alert('로그인 성공!');
-        onLoginSuccess(email);
-        navigate('/'); // 메인 페이지로 리다이렉트
-      } else {
-        alert(`API 응답 오류: ${response.status}`);
-      }
-      
+      const { access_token } = response.data;
+      localStorage.setItem('accessToken', access_token); // 액세스 토큰 저장
+      await getUserInfo(access_token); // 사용자 정보 요청
     } catch (error) {
-      console.error("API 요청 중 오류:", error.response ? error.response.data : error.message);
-      
-      if (error.response && error.response.data && error.response.data.status_message) {
-        alert(`API 요청 중 오류: ${error.response.data.status_message}`);
-      } else {
-        alert('API 요청 중 오류가 발생했습니다.');
-      }
+      console.error('액세스 토큰 요청 실패:', error.response?.data || error.message);
+      alert(`로그인 실패: ${error.response?.data?.error_description || error.message}`);
     }
   };
 
-  // 회원가입 페이지로 이동하는 함수 (회전 애니메이션 추가)
-  const handleSignUp = () => {
-    setIsRotating(true); // 회전 시작
+  // 사용자 정보 요청 함수
+  const getUserInfo = async (accessToken) => {
+    try {
+      const response = await axios.get('https://kapi.kakao.com/v2/user/me', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
 
-    // 애니메이션이 끝난 후 회원가입 페이지로 이동
-    setTimeout(() => {
-      navigate('/signup');
-    }, 600); // CSS에서 설정한 전환 시간과 동일하게 설정 (0.6초)
+      const { email, profile } = response.data.kakao_account;
+
+      // 사용자 정보를 로컬 스토리지에 저장
+      localStorage.setItem(
+        'user',
+        JSON.stringify({
+          email,
+          nickname: profile.nickname,
+          profileImg: profile.profile_image_url,
+        })
+      );
+
+      alert('카카오 로그인 성공!');
+      window.location.replace('/'); // 메인 페이지로 리다이렉트
+    } catch (error) {
+      console.error('사용자 정보 요청 실패:', error.response?.data || error.message);
+      alert(`사용자 정보 요청 실패: ${error.response?.data?.error_description || error.message}`);
+    }
   };
 
   return (
-    <div className={`signin ${isRotating ? 'rotate-out' : ''}`}>
+    <div className="signin">
       <h1>로그인</h1>
-      
-      <input 
-        type="email" 
-        placeholder="이메일" 
-        value={email}
-        onChange={(e) => setEmail(e.target.value)} 
-      />
-      
-      <input 
-        type="text" 
-        placeholder="TMDB API 키" 
-        value={apiKey}
-        onChange={(e) => setApiKey(e.target.value)} 
-      />
-
-      <div className="checkbox-container">
-        <input type="checkbox" id="rememberMe" checked={rememberMe} onChange={() => setRememberMe(!rememberMe)} />
-        <label htmlFor="rememberMe">아이디 기억하기</label>
-      </div>
-
-      <button onClick={handleLogin}>
-        로그인
+      <button onClick={handleKakaoLogin} className="kakao-login-button">
+        카카오톡으로 로그인
       </button>
-
-      {/* 회원가입 버튼 추가 */}
-      <button onClick={handleSignUp} className="signup-button">
-        회원가입
-      </button>
-
     </div>
   );
 };

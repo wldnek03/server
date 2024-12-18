@@ -6,6 +6,7 @@ import PopularList from './components/PopularList';
 import SearchMovies from './pages/SearchMovies';
 import MovieList from './pages/MovieList';
 import MovieDetail from './pages/MovieDetail';
+import Callback from './Callback';
 
 const AppRoutes = () => (
   <Router>
@@ -16,6 +17,7 @@ const AppRoutes = () => (
       <Route path="/popular" element={<MovieList movies={PopularList} />} />
       <Route path="/search" element={<MovieList movies={SearchMovies} />} />
       <Route path="/movie/:id" component={MovieDetail} /> 
+      <Route path="/oauth/callback" element={<Callback />} />
     </Routes>
   </Router>
 );

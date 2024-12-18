@@ -1,11 +1,9 @@
 import axios from 'axios';
 
-const API_KEY = "a8fdc4ad0c4a3ec59dc4a0d014a5ec5a";
 const BASE_URL = 'https://api.themoviedb.org/3';
 
 // 기본 파라미터 설정
 const defaultParams = {
-  api_key: API_KEY,
   language: 'ko-KR',
 };
 
